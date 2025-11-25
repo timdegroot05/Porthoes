@@ -1,8 +1,8 @@
 <?php
-include 'includes/db.php';
+    include __DIR__ . '/../includes/db.php';
 
-// Haal alle activiteiten op
-$sql = "SELECT * FROM Activiteiten";
+    // Haal alle activiteiten op
+    $sql = "SELECT * FROM Activiteiten";
 $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
