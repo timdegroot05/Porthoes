@@ -45,7 +45,6 @@ $resultaat = $conn->query($sql);
             flex-direction: column;
             align-items: center;
             font-family: Arial, sans-serif;    
-            overflow-y: hidden;
          }
         table {
             width: 500px;
