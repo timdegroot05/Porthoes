@@ -41,15 +41,19 @@ $resultaat = $conn->query($sql);
     <title>Deelnemerslijst</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-        }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;    
+            overflow-y: hidden;
+         }
         table {
-            width: 350px;
+            width: 500px;
             border-collapse: collapse;
-            margin-top: 20px;
+            
         }
         th, td {
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ccc;
             text-align: left;
         }
@@ -87,6 +91,7 @@ while ($rij = $resultaat->fetch_assoc()) {
             </tr>
         ";
     }
+    
 
     // Voeg deelnemer toe
     echo "
