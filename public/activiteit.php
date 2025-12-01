@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <a href="index.php" class="btn">Nu inschrijven</a>
+    <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
   </div>
 </body>
 </html>
