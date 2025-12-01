@@ -57,7 +57,7 @@ $result = $conn->query($sql);
     </style>
 
     <aside>
-        <input type="radio" placeholder="Filter activiteiten">Voor ouderen
+        <!-- <input type="radio" placeholder="Filter activiteiten">Voor ouderen -->
     </aside>
 
     <style>
