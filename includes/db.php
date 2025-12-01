@@ -9,5 +9,5 @@ $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die("L database connectie!: " . $conn->connect_error);
 } else {
-    echo "W database connectie!";
+    // echo "W database connectie!";
 }
