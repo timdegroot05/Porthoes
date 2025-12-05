@@ -36,15 +36,15 @@ $recent = $stmt->fetchAll();
             margin: 0;
             padding: 20px;
 
-            
-                background-image: url(images/paardrijdenn.png);
-                background-size: cover;
-                /* background-position: center; */
-                height: 100vh;
-                background-repeat: no-repeat;
-                background-color: #453E3E;
-                color: black;
-            
+
+            background-image: url(images/paardrijdenn.png);
+            background-size: cover;
+            /* background-position: center; */
+            height: 100vh;
+            background-repeat: no-repeat;
+            background-color: #453E3E;
+            color: black;
+
         }
 
         .container {
@@ -141,6 +141,9 @@ $recent = $stmt->fetchAll();
             <p class="empty">Geen recente reserveringen gevonden.</p>
         <?php endif; ?>
     </div>
+
+    <a href="deelnemers.php" role="button" tabindex="0" style="display:inline-block;padding:10px 16px;background:#0b4a6f;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;box-shadow:0 2px 6px rgba(11,74,111,0.25);">deelnemers</a>
+
 </body>
 
 </html>

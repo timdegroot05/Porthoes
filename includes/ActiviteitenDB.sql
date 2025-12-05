@@ -118,3 +118,5 @@ VALUES
 (5, 'Joris Bakker', 35),
 (5, 'Nina Bakker', 7);
 
+SELECT id, activiteittijd_id, email, aantal_personen, status FROM reserveringen ORDER BY id DESC LIMIT 10
+
