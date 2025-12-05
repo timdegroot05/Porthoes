@@ -67,14 +67,14 @@ INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs)
 VALUES
 ('zwembad', 'Workshop boogschieten voor beginners', 12, 25.00),
 ('kampvuur', 'Buitenklimwand activiteit', 8, 40.00),
-('bingo', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('geitenyoga', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('koe melken met nepkoe', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('koeien knuffelen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('eieren rapen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('tafeltennis toernooi', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('tienkamp', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-('rondleiding', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
+('bingo', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('geitenyoga', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('koe melken met nepkoe', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('koeien knuffelen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('eieren rapen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('tafeltennis toernooi', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('tienkamp', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
+('rondleiding', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
 ('ijssalon', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
 
 -- Bekijk activiteiten
