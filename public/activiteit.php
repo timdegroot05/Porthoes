@@ -15,12 +15,19 @@
   //hier haal je het id uit de url
   $id = (int)($_GET['id'] ?? 0);
 
-  $sql = "zet hier je query neer met $id";
+  $sql =
+  "select
+  * from activiteiten
+  where id = $id";
 
   $resultaat = $conn->query($sql);
 
   ?>
-
+<?php
+while ($row = $resultaat->fetch_assoc()) {
+    var_dump($row);  // Hier krijg je de echte rijen als array
+}
+?>
 
   <!DOCTYPE html>
   <html lang="en">
