@@ -16,18 +16,22 @@
   $id = (int)($_GET['id'] ?? 0);
 
   $sql =
-  "select
+    "select
   * from activiteiten
   where id = $id";
 
-  $resultaat = $conn->query($sql);
 
   ?>
-<?php
-while ($row = $resultaat->fetch_assoc()) {
-    var_dump($row);  // Hier krijg je de echte rijen als array
-}
-?>
+  <?php
+  // while ($row = $resultaat->fetch_assoc()) {
+  //   var_dump($row);  // Hier krijg je de echte rijen als array
+  // }
+
+  print_r($id);
+  ?>
+
+
+
 
   <!DOCTYPE html>
   <html lang="en">
@@ -111,8 +115,16 @@ while ($row = $resultaat->fetch_assoc()) {
   <body>
     <img src="/images/paardrijden.png" alt="">
     <div class="container">
-      <h1>Paardrijden op de camping van boer Bert</h1>
-      <div class="subtitle">avontuurlijke paardrijdtochten voor jong en oud!</div>
+      
+      <?php   $resultaat = $conn->query($sql);
+    
+ ?>
+
+      <?php while ($row = $resultaat->fetch_assoc()) { ?> 
+        <h1><?= $row['naam']; ?> </h1>
+        <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3>
+      <?php }; ?>
+
 
       <div class="info-wrapper">
         <div class="info-box">

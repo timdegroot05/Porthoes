@@ -57,9 +57,6 @@ CREATE TABLE Deelnemers (
         ON DELETE CASCADE,
     CONSTRAINT chk_leeftijd CHECK (leeftijd IS NULL OR leeftijd >= 0)
 );
-
-USE ActiviteitenDB;
-
 -- ============================
 -- 1. TESTDATA VOOR ACTIVITEITEN
 -- ============================
@@ -77,10 +74,6 @@ VALUES
 ('rondleiding', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
 ('ijssalon', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
 
--- Bekijk activiteiten
-SELECT * FROM Activiteiten;
-
-
 -- ====================================
 -- 2. TESTDATA VOOR ACTIVITEITTIJDEN
 -- ====================================
@@ -90,9 +83,6 @@ VALUES
 (1, '2025-06-10 12:00:00', '2025-06-15 14:00:00', '2025-06-15 16:00:00', 'beschikbaar'),
 (2, '2025-07-01 10:00:00', '2025-07-03 09:00:00', '2025-07-03 12:00:00', 'beschikbaar'),
 (3, '2025-06-20 18:00:00', '2025-06-25 19:00:00', '2025-06-25 21:30:00', 'beschikbaar');
-
--- Bekijk tijden
-SELECT * FROM ActiviteitTijden;
 
 
 -- ====================================
@@ -105,9 +95,6 @@ VALUES
 (2, 'klant@test.com', 4, 'bevestigd'),
 (3, 'anna@mail.com', 2, 'bevestigd'),
 (4, 'sophie@web.nl', 3, 'bevestigd');
-
--- Bekijk reserveringen
-SELECT * FROM Reserveringen;
 
 
 -- 
