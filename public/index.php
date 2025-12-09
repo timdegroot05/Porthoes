@@ -16,6 +16,8 @@ $result = $conn->query($sql);
 <body>
 
     <h1>Activiteiten</h1>
+    <a href="admin_login.php">Admin paneel</a>
+
 
     <?php if ($result->num_rows > 0): ?>
         <ul>
