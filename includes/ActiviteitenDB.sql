@@ -57,29 +57,22 @@ CREATE TABLE Deelnemers (
         ON DELETE CASCADE,
     CONSTRAINT chk_leeftijd CHECK (leeftijd IS NULL OR leeftijd >= 0)
 );
-
-USE ActiviteitenDB;
-
 -- ============================
 -- 1. TESTDATA VOOR ACTIVITEITEN
 -- ============================
 INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs)
 VALUES
-('zwembad', 'Workshop boogschieten voor beginners', 12, 25.00),
-('kampvuur', 'Buitenklimwand activiteit', 8, 40.00),
-('bingo', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('geitenyoga', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('koe melken met nepkoe', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('koeien knuffelen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('eieren rapen', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('tafeltennis toernooi', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('tienkamp', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('rondleiding', 'Creatieve schilderworkshop met begeleiding', 15, 30.00),
-('ijssalon', 'Creatieve schilderworkshop met begeleiding', 15, 30.00);
-
--- Bekijk activiteiten
-SELECT * FROM Activiteiten;
-
+('zwembad', 'Zwemmen met je familie en vrienden', 25, 0.00),
+('kampvuur', 'in de avond rond het vuurtje zitten', 8, 5.00),
+('bingo', 'gokken met de stichting!', 30, 4.00),
+('geitenyoga', 'lekker rekken en strekken met geiten op je rug', 10, 5.00),
+('koe melken met nepkoe', 'jij freaky mf', 10, 0.00),
+('koeien knuffelen', 'jij cutie lekker koeien knuffelen', 10, 0.00),
+('eieren rapen', 'ballen oppakken van de grond #lekker', 8, 0.00),
+('tafeltennis toernooi', 'tryharden tegen kinderen die denken dat ze goed zijn', 16, 0.00),
+('tienkamp', 'spelletjes avond', 20, 0.00),
+('rondleiding', 'bekijk de hele camping onder leiding van boer bert', 5, 5.00),
+('ijssalon', 'als het te warm is lekker afkoelen met ijsjes', 20, 5.00);
 
 -- ====================================
 -- 2. TESTDATA VOOR ACTIVITEITTIJDEN
@@ -90,9 +83,6 @@ VALUES
 (1, '2025-06-10 12:00:00', '2025-06-15 14:00:00', '2025-06-15 16:00:00', 'beschikbaar'),
 (2, '2025-07-01 10:00:00', '2025-07-03 09:00:00', '2025-07-03 12:00:00', 'beschikbaar'),
 (3, '2025-06-20 18:00:00', '2025-06-25 19:00:00', '2025-06-25 21:30:00', 'beschikbaar');
-
--- Bekijk tijden
-SELECT * FROM ActiviteitTijden;
 
 
 -- ====================================
@@ -105,9 +95,6 @@ VALUES
 (2, 'klant@test.com', 4, 'bevestigd'),
 (3, 'anna@mail.com', 2, 'bevestigd'),
 (4, 'sophie@web.nl', 3, 'bevestigd');
-
--- Bekijk reserveringen
-SELECT * FROM Reserveringen;
 
 
 -- 

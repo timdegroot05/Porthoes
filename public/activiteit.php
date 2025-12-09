@@ -16,18 +16,22 @@
   $id = (int)($_GET['id'] ?? 0);
 
   $sql =
-  "select
+    "select
   * from activiteiten
   where id = $id";
 
-  $resultaat = $conn->query($sql);
 
   ?>
-<?php
-while ($row = $resultaat->fetch_assoc()) {
-    var_dump($row);  // Hier krijg je de echte rijen als array
-}
-?>
+  <?php
+  // while ($row = $resultaat->fetch_assoc()) {
+  //   var_dump($row);  // Hier krijg je de echte rijen als array
+  // }
+
+  print_r($id);
+  ?>
+
+
+
 
   <!DOCTYPE html>
   <html lang="en">
@@ -111,19 +115,30 @@ while ($row = $resultaat->fetch_assoc()) {
   <body>
     <img src="/images/paardrijden.png" alt="">
     <div class="container">
-      <h1>Paardrijden op de camping van boer Bert</h1>
-      <div class="subtitle">avontuurlijke paardrijdtochten voor jong en oud!</div>
+      
+      <?php   $resultaat = $conn->query($sql);
+    
+ ?>
+
+      <?php while ($row = $resultaat->fetch_assoc()) { ?> 
+        <h1><?= $row['naam']; ?> </h1>
+        <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3>
+        <div class="info-box"><b>Praktische informatie<b><p><?= $row[ 'max_deelnemers']; ?> max deelnemers<p>
+          <p class="prijs">Prijs: €<?= $row['prijs']; ?></p>
+        </div>
+      <?php }; ?>
+
 
       <div class="info-wrapper">
-        <div class="info-box">
+        <div class="info-box">  
           <h2>Waar en wanneer?</h2>
           <p>Locatie: op de camping<br>Tijd: 10:00 – 13:00</p>
         </div>
 
-        <div class="info-box">
+        <!-- <div class="info-box">
           <h2>Praktische informatie</h2>
           <p>Lunch inbegrepen<br>kinderen 10–14 jaar</p>
-        </div>
+        </div> -->
       </div>
 
       <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
