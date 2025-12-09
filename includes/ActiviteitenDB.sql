@@ -62,17 +62,17 @@ CREATE TABLE Deelnemers (
 -- ============================
 INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs)
 VALUES
-('zwembad', 'Zwemmen met je familie en vrienden', 12, 25.00),
-('kampvuur', 'in de avond rond het vuurtje zitten', 8, 40.00),
-('bingo', 'gokken met de stichting!', 15, 30.00),
-('geitenyoga', 'lekker rekken en strekken met geiten op je rug', 15, 30.00),
-('koe melken met nepkoe', 'jij freaky mf', 15, 30.00),
-('koeien knuffelen', 'jij cutie lekker koeien knuffelen', 15, 30.00),
-('eieren rapen', 'ballen oppakken van de grond #lekker', 15, 30.00),
-('tafeltennis toernooi', 'tryharden tegen kinderen die denken dat ze goed zijn', 15, 30.00),
-('tienkamp', 'spelletjes avond', 15, 30.00),
-('rondleiding', 'bekijk de hele camping onder leiding van boer bert', 15, 30.00),
-('ijssalon', 'als het te warm is lekker afkoelen met ijsjes', 15, 30.00);
+('zwembad', 'Zwemmen met je familie en vrienden', 25, 0.00),
+('kampvuur', 'in de avond rond het vuurtje zitten', 8, 5.00),
+('bingo', 'gokken met de stichting!', 30, 4.00),
+('geitenyoga', 'lekker rekken en strekken met geiten op je rug', 10, 5.00),
+('koe melken met nepkoe', 'jij freaky mf', 10, 0.00),
+('koeien knuffelen', 'jij cutie lekker koeien knuffelen', 10, 0.00),
+('eieren rapen', 'ballen oppakken van de grond #lekker', 8, 0.00),
+('tafeltennis toernooi', 'tryharden tegen kinderen die denken dat ze goed zijn', 16, 0.00),
+('tienkamp', 'spelletjes avond', 20, 0.00),
+('rondleiding', 'bekijk de hele camping onder leiding van boer bert', 5, 5.00),
+('ijssalon', 'als het te warm is lekker afkoelen met ijsjes', 20, 5.00);
 
 -- ====================================
 -- 2. TESTDATA VOOR ACTIVITEITTIJDEN
