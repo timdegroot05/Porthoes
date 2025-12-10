@@ -51,15 +51,14 @@
 
       .container {
         background-color: #668668;
-        width: 85%;
+        width: 50%;
         margin: 40px auto;
         padding: 40px;
         border-radius: 30px;
         display: flex;
         gap: 40px;
-        align-items:flex-start;
-        flex-direction: column-reverse;
-        justify-content: space-between;
+        align-items:center;
+        flex-direction:row;
       }
 
       .wanneer {
@@ -122,7 +121,7 @@
       }
 
       .image-section img {
-       width: 100%;
+       width: 200%;
        border-radius: 30px;
       }
 
@@ -136,7 +135,7 @@
 
       .top-texta {
         position: absolute;
-        top: -10px;
+        top: -20px;
         right: 0px;
         font-size: 14px;
       }
@@ -149,7 +148,7 @@
         <div class="top-text"><h1><?= $row['naam']; ?> </h1>
         <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3></div>
         <div class="container">
-        <div class="info-box"><b>Praktische informatie<b><p><?= $row[ 'max_deelnemers']; ?> max deelnemers<p>
+        <div class="1"><div class="info-box"><b>Praktische informatie</b><p><?= $row[ 'max_deelnemers']; ?> max deelnemers<p>
           <p class="prijs">Prijs: €<?= $row['prijs']; ?></p>
         </div>
       <?php }; ?>
@@ -158,15 +157,17 @@
         <div class="wanneer">  
           <h2>Waar en wanneer?</h2>
           </div>
-          <div class="inputveld">Wanneer</div>
+          <div class="inputveld"><b>Wanneer</b></div>
+      </div>
         
 
-        <div class="image-section">
+        <div class="2"><div class="image-section">
          <div class="top-texta">Aantal aanmeldingen:</div>
          <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
         </div>
 
       <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
+      </div>
     </div>
   </body>
 
