@@ -1,5 +1,5 @@
 <!-- bingo, kampvuur, geitenyoga, zwembad, boogschieten, koe melken met nepkoe, boerengolf -->
-<<?php  // Database verbinding
+<?php  // Database verbinding
   $server = "localhost";
   $gebruiker = "root";
   $wachtwoord = "";
@@ -15,11 +15,11 @@
   //hier haal je het id uit de url
   $id = (int)($_GET['id'] ?? 0);
 
-  $sql =
-    "select
-  * from activiteiten
-  where id = $id";
-
+  $sql = "SELECT * FROM activiteiten WHERE id = ?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $id);
+  $stmt->execute();
+  $resultaat = $stmt->get_result();
 
   ?>
   <?php
@@ -27,9 +27,8 @@
   //   var_dump($row);  // Hier krijg je de echte rijen als array
   // }
 
-  print_r($id);
+  // print_r($id);
   ?>
-
 
 
 
@@ -41,58 +40,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paardrijden op de camping</title>
 
-
     <style>
       body {
-        background-image: url(images/paardrijdenn.png);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
+        background-color: #edf4e8;
         margin: 0;
-        font-family: 'Georgia', serif;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        color: white;
-        justify-content: center;
-        background-color: #453E3E;
+        padding: 0;
+        font-family: 'Arial', serif;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
       }
 
       .container {
-        text-align: center;
-        max-width: 1000px;
+        background-color: #668668;
+        width: 85%;
+        margin: 40px auto;
+        padding: 40px;
+        border-radius: 30px;
+        display: flex;
+        gap: 40px;
+        align-items:flex-start;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+      }
+
+      .wanneer {
+        width: 35%;
+        color: black;
+      }
+
+      .wanneer h2 {
+        font-size: 18px;
+        margin-bottom: 8px;
       }
 
       h1 {
-        font-size: 3rem;
-        margin-bottom: 0.2rem;
+        text-align: center;
+        margin-top: 30px;
+        font-size: 48px;
+        font-family: "Georgia", serif;
       }
 
-      .subtitle {
-        font-size: 1.4rem;
-        margin-bottom: 2rem;
-      }
-
-      .info-wrapper {
-        display: flex;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-top: 2rem;
+      .inputveld {
+        background-color: #f7e493;
+        border-radius: 20px;
+        padding: 12px;
+        margin-bottom: 20px;
+        width: 100%;
+        border: none;
+        font-size: 16px;
       }
 
       .info-box {
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 12px;
-        padding: 1.5rem;
-        flex: 1;
-        color: #000;
-        text-shadow: none;
-      }
-
-      .info-box h2 {
-        margin-top: 0;
-      }
+       background-color: #f7e493;
+       border-radius: 20px;
+       padding: 12px;
+       width: 300px;
+       height: 200px;
+       border: none;
+       font-size: 16px;
+       resize: none;
+     }
 
       .btn {
         display: inline-block;
@@ -109,37 +115,56 @@
       .btn:hover {
         background: #3a724f;
       }
+
+      .image-section {
+       width: 60%;
+       position: relative;
+      }
+
+      .image-section img {
+       width: 100%;
+       border-radius: 30px;
+      }
+
+      .top-text {
+        text-align: center;
+       top: -10px;
+       right: 0;
+       font-size: 14px;
+       text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      }
+
+      .top-texta {
+        position: absolute;
+        top: -10px;
+        right: 0px;
+        font-size: 14px;
+      }
     </style>
   </head>
-
-  <body>
-    <img src="/images/paardrijden.png" alt="">
-    <div class="container">
-      
-      <?php   $resultaat = $conn->query($sql);
+ <body>
     
- ?>
 
       <?php while ($row = $resultaat->fetch_assoc()) { ?> 
-        <h1><?= $row['naam']; ?> </h1>
-        <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3>
+        <div class="top-text"><h1><?= $row['naam']; ?> </h1>
+        <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3></div>
+        <div class="container">
         <div class="info-box"><b>Praktische informatie<b><p><?= $row[ 'max_deelnemers']; ?> max deelnemers<p>
           <p class="prijs">Prijs: €<?= $row['prijs']; ?></p>
         </div>
       <?php }; ?>
 
 
-      <div class="info-wrapper">
-        <div class="info-box">  
+        <div class="wanneer">  
           <h2>Waar en wanneer?</h2>
-          <p>Locatie: op de camping<br>Tijd: 10:00 – 13:00</p>
-        </div>
+          </div>
+          <div class="inputveld">Wanneer</div>
+        
 
-        <!-- <div class="info-box">
-          <h2>Praktische informatie</h2>
-          <p>Lunch inbegrepen<br>kinderen 10–14 jaar</p>
-        </div> -->
-      </div>
+        <div class="image-section">
+         <div class="top-texta">Aantal aanmeldingen:</div>
+         <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
+        </div>
 
       <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
     </div>
