@@ -2,8 +2,10 @@
 include __DIR__ . '/../includes/db.php';
 
 // Haal alle activiteiten op
-$sql = "SELECT * FROM Activiteiten";
+$selectedTag = $_GET['tag'] ?? 'geen_reservering';
+$sql = "SELECT * FROM Activiteiten WHERE tag LIKE '%$selectedTag%'";
 $result = $conn->query($sql);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,37 +16,48 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-    <div id="kaart">
+    <div class="sidebar">
+        <div>filter opties</div>
+        <div>
+
+            <?php
+            // Default value if no tag is set
+            ?>
+            <a href="?tag=geen_reservering">Geen reservering nodig</a> <br>
+            <a href="?tag=niet_fysiek">niet fysiek</a> <br>
+            <a href="?tag=fysiek">fysiek</a> <br>
+            <a href="?tag=jong">voor jonge kinderen</a> <br>
+            <a href="?tag=eten">eten & drinken</a> <br>
+            <a href="?tag=informatief">informatief</a> <br>
+            niet fysiek <br>
+            fysiek <br>
+            voor jonge kinderen <br>
+            eten & drinken <br>
+            informatief <br>
+        </div>
+
+        <?php while ($row = $result->fetch_assoc()) {
+            echo "<pre>";
+            print_r($row['naam']);
+            echo "</pre>";
+        }
+        ?>
 
     </div>
-
-    <div>filter opties</div>
-    <div>
-        voor ouderen <br>
-        <label><input type="checkbox" name="doelgroep[]" value="ouderen"> Voor ouderen</label><br>
-        voor jonge kinderen -3 jaar <br>
-        voor 12+ jaar <br>
-        ochtend activiteiten<br>
-        middag activiteiten<br>
-        avond activiteiten<br>
-    </div>
-
-    <?php while ($row = $result->fetch_assoc()) {
-        echo "<pre>";
-        print_r($row['naam']);
-        print_r($row['id']);
-        echo "</pre>";
-    }
-    ?>
-
-    <div class="btn-wrap">
-        <a class="btn" href="activiteit.php">Bekijk Activiteiten</a>
-    </div>
-
-
 
 
 </body>
 
 
 </html>
+
+<style>
+    body {
+        background-image: url(images/Map_v2_taller.png);
+        background-size: cover;
+        height: 100vh;
+        width: 50vh;
+        background-repeat: no-repeat;
+
+    }
+</style>
