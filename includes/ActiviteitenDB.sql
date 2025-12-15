@@ -118,3 +118,15 @@ CREATE TABLE IF NOT EXISTS Admins (
     email VARCHAR(100) NOT NULL UNIQUE,
     wachtwoord VARCHAR(255) NOT NULL
 );
+
+
+CREATE TABLE IF NOT EXISTS inschrijvingen (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    activity VARCHAR(100) NOT NULL,
+    name VARCHAR(100),                 -- aanmelder (optioneel)
+    email VARCHAR(150) NOT NULL,       -- email is verplicht
+    kampeerplek INT NOT NULL,          -- 1 - 60
+    aantal_personen INT NOT NULL,      -- aantal personen dat wordt aangemeld
+    personen_json TEXT NOT NULL,       
+    aangemeld_op TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
