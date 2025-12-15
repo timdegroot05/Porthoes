@@ -27,8 +27,10 @@ if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <h2>Admin functies</h2>
     <ul>
-        <li><a href="reserveringen.php">Reserveringen beheren</a></li>
-        <li><a href="deelnemers.php">Deelnemers bekijken</a></li>
+        <li><a href="../reserveringen.php">Reserveringen beheren</a></li>
+        <li><a href="../deelnemers.php">Deelnemers bekijken</a></li>
+        <li><a href="../activiteitenKaart.php">Activiteiten kaart</a></li>
+        <li><a href="admin_activiteiten.php">Activiteiten beheren</a></li>
         <!-- hier kun je meer admin-linkjes zetten -->
     </ul>
 </body>
