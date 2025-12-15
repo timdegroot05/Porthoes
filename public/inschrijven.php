@@ -38,11 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personen_json = json_encode($personen);
 
     if ($email !== "") {
-        $stmt = $pdo->prepare("
-            INSERT INTO inschrijvingen (activity, name, email, kampeerplek, aantal_personen, personen_json)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([$activity, $name, $email, $kampeerplek, $aantal, $personen_json]);
+      $stmt = $pdo->prepare("
+    INSERT INTO inschrijvingen 
+    (activity, name, email, kampeerplek, aantal_personen, personen_json)
+    VALUES 
+    (:activity, :name, :email, :kampeerplek, :aantal_personen, :personen_json)
+");
+
+$stmt->execute([
+    ':activity'         => $activity,
+    ':name'             => $name,
+    ':email'            => $email,
+    ':kampeerplek'      => $kampeerplek,
+    ':aantal_personen'  => $aantal,
+    ':personen_json'    => $personen_json
+]);
+
 
         $message = "Je bent ingeschreven voor <strong>" . htmlspecialchars($activity) . "</strong>!";
     } else {
