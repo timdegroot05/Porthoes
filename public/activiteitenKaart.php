@@ -17,7 +17,11 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+
+<?php include __DIR__ . '/../includes/header.php'; ?>
+
+<div class="activiteiten-body">
+
     <!-- <div class="sidebar"> -->
     <div class="sidebar">
         <div>filter opties</div>
@@ -32,127 +36,100 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <iframe src="" frameborder="0"></iframe>
+    <iframe src="../public/images/Map_resized.png" frameborder="0">
 
-    <div></div>
+    </iframe>
 
     <!-- </div> -->
 
-    <div class="activiteiten">
+    <!-- <div class="activiteiten"> -->
 
-        <?php while ($row = $result->fetch_assoc()) {
-            echo "<a href='activiteit.php?id=" . $row['id'] . "'>" . $row['naam'] . "</a><br>";
-        }
-        ?>
-    </div>
+    <?php while ($row = $result->fetch_assoc()) {
+        echo "<a href='activiteit.php?id=" . $row['id'] . "'>" . $row['naam'] . "</a><br>";
+    }
+    ?>
+</div>
 
+<?php include __DIR__ . '/../includes/footer.php'; ?>
 
-</body>
+</div>
 
 
 </html>
 
 <style>
-    body {
+    iframe {
+        /* position: absolute; */
+        width: 100%;
+        height: 75%;
+        border: none;
+        margin: 5rem;
+    }
+
+    .activiteiten-body {
         margin: 0;
         padding: 0;
         font-family: Arial, Helvetica, sans-serif;
     }
 
-    @media (min-width: 800px) {
-        body {
-            background-image: url(../public/images/Map_v2_taller.png);
-            background-size: cover;
-            height: 100vh;
-            width: 50vh;
-            background-repeat: no-repeat;
-        }
 
-
-        .activiteiten {
-            border-radius: 10px;
-            background-color: rgba(139, 192, 110);
-            padding: 20px;
-        }
-
-        .activiteiten a {
-            display: block;
-            padding: 10px 0;
-            color: #333;
-            text-decoration: none;
-            font-size: 20px;
-            transition: color 0.2s;
-        }
-
-        .activiteiten a:hover {
-            color: #0066cc;
-            text-decoration: underline;
-        }
-
-        .sidebar {
-            position: absolute;
-            font-family: Arial, Helvetica, sans-serif;
-            top: 0;
-            left: 80rem;
-            width: 200px;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar>div:first-child {
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .sidebar a {
-            display: block;
-            padding: 8px 0;
-            color: #333;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .sidebar a:hover {
-            color: #0066cc;
-            text-decoration: underline;
-        }
-
-
+    .activiteiten-body {
+        display: flex;
+        /* background-image: url(../public/images/Map_v2_taller.png); */
+        background-size: cover;
+        height: 100vh;
+        width: 100vw;
+        background-repeat: no-repeat;
     }
 
 
-    @media (max-width: 800px) {
-        body {
-            padding: 10px;
-            font-size: small;
-        }
+    .activiteiten {
+        border-radius: 10px;
+        background-color: white;
+    }
 
-        .activiteiten {
-            width: 80vw;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 20px 0;
-        }
+    .activiteiten a {
+        display: block;
+        padding: 10px 0;
+        color: #333;
+        text-decoration: none;
+        font-size: 20px;
+        transition: color 0.2s;
+    }
 
-        .activiteiten br {
-            display: none;
-        }
+    .activiteiten a:hover {
+        color: #0066cc;
+        text-decoration: underline;
+    }
 
-        .activiteiten a {
-            flex-basis: calc(50% - 10px);
-            box-sizing: border-box;
-            background-color: #a3aab0ff;
-            color: white;
-            height: 4rem;
+    .sidebar {
 
-            text-align: center;
-            border-radius: 8px;
+        font-family: Arial, Helvetica, sans-serif;
+        top: 0;
+        left: 80rem;
+        width: 200px;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
 
+    .sidebar>div:first-child {
+        font-weight: bold;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
 
-        }
+    .sidebar a {
+        display: block;
+        padding: 8px 0;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .sidebar a:hover {
+        color: #0066cc;
+        text-decoration: underline;
     }
 </style>
