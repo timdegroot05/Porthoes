@@ -1,174 +1,202 @@
 <!-- bingo, kampvuur, geitenyoga, zwembad, boogschieten, koe melken met nepkoe, boerengolf -->
 <?php  // Database verbinding
-  $server = "localhost";
-  $gebruiker = "root";
-  $wachtwoord = "";
-  $database = "ActiviteitenDB";
+$server = "localhost";
+$gebruiker = "root";
+$wachtwoord = "";
+$database = "ActiviteitenDB";
 
-  $conn = new mysqli($server, $gebruiker, $wachtwoord, $database);
+$conn = new mysqli($server, $gebruiker, $wachtwoord, $database);
 
-  // Foutencontrole
-  if ($conn->connect_error) {
-    die("Verbinding mislukt: " . $conn->connect_error);
-  }
+// Foutencontrole
+if ($conn->connect_error) {
+  die("Verbinding mislukt: " . $conn->connect_error);
+}
 
-  //hier haal je het id uit de url
-  $id = (int)($_GET['id'] ?? 0);
+//hier haal je het id uit de url
+$id = (int)($_GET['id'] ?? 0);
 
-  $sql = "SELECT * FROM activiteiten WHERE id = ?";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("i", $id);
-  $stmt->execute();
-  $resultaat = $stmt->get_result();
+$sql = "
+  SELECT 
+    a.id,
+    a.naam,
+    a.beschrijving,
+    a.max_deelnemers,
+    a.prijs,
+    t.id AS tijd_id,
+    t.deadline_inschrijven,
+    t.starttijd,
+    t.eindtijd,
+    t.status
+  FROM Activiteiten a
+  LEFT JOIN ActiviteitTijden t
+    ON a.id = t.activiteit_id
+  WHERE a.id = ?
+";
 
-  ?>
-  <?php
-  // while ($row = $resultaat->fetch_assoc()) {
-  //   var_dump($row);  // Hier krijg je de echte rijen als array
-  // }
-
-  // print_r($id);
-  ?>
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$resultaat = $stmt->get_result();
 
 
+?>
+<?php
+// while ($row = $resultaat->fetch_assoc()) {
+//   var_dump($row);  // Hier krijg je de echte rijen als array
+// }
 
-  <!DOCTYPE html>
-  <html lang="en">
+// print_r($id);
+?>
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Paardrijden op de camping</title>
 
-    <style>
-      body {
-        background-color: #edf4e8;
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', serif;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-      }
 
-      .container {
-        background-color: #668668;
-        width: 50%;
-        margin: 40px auto;
-        padding: 40px;
-        border-radius: 30px;
-        display: flex;
-        gap: 40px;
-        align-items:center;
-        flex-direction:row;
-      }
+<!DOCTYPE html>
+<html lang="en">
 
-      .wanneer {
-        width: 35%;
-        color: black;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paardrijden op de camping</title>
 
-      .wanneer h2 {
-        font-size: 18px;
-        margin-bottom: 8px;
-      }
+  <style>
+    body {
+      background-color: #edf4e8;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
 
-      h1 {
-        text-align: center;
-        margin-top: 30px;
-        font-size: 48px;
-        font-family: "Georgia", serif;
-      }
+    .container {
+      background-color: #668668;
+      width: 50%;
+      margin: 40px auto;
+      padding: 40px;
+      border-radius: 30px;
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex-direction: row;
+    }
 
-      .inputveld {
-        background-color: #f7e493;
-        border-radius: 20px;
-        padding: 12px;
-        margin-bottom: 20px;
-        width: 100%;
-        border: none;
-        font-size: 16px;
-      }
+    .wanneer {
+      width: 35%;
+      color: black;
+    }
 
-      .info-box {
-       background-color: #f7e493;
-       border-radius: 20px;
-       padding: 12px;
-       width: 300px;
-       height: 200px;
-       border: none;
-       font-size: 16px;
-       resize: none;
-     }
+    .wanneer h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
 
-      .btn {
-        display: inline-block;
-        margin-top: 1.5rem;
-        background: #4a8f64;
-        color: #fff;
-        padding: 0.8rem 2rem;
-        border-radius: 8px;
-        font-size: 1.2rem;
-        text-decoration: none;
-        transition: 0.2s;
-      }
+    h1 {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 48px;
+      font-family: "Georgia", serif;
+    }
 
-      .btn:hover {
-        background: #3a724f;
-      }
+    .inputveld {
+      background-color: #f7e493;
+      border-radius: 20px;
+      padding: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      border: none;
+      font-size: 16px;
+    }
 
-      .image-section {
-       width: 60%;
-       position: relative;
-      }
+    .info-box {
+      background-color: #f7e493;
+      border-radius: 20px;
+      padding: 12px;
+      width: 300px;
+      height: 200px;
+      border: none;
+      font-size: 16px;
+      resize: none;
+    }
 
-      .image-section img {
-       width: 200%;
-       border-radius: 30px;
-      }
+    .btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      background: #4a8f64;
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: 0.2s;
+    }
 
-      .top-text {
-        text-align: center;
-       top: -10px;
-       right: 0;
-       font-size: 14px;
-       text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      }
+    .btn:hover {
+      background: #3a724f;
+    }
 
-      .top-texta {
-        position: absolute;
-        top: -20px;
-        right: 0px;
-        font-size: 14px;
-      }
-    </style>
-  </head>
- <body>
-    
+    .image-section {
+      width: 60%;
+      position: relative;
+    }
 
-      <?php while ($row = $resultaat->fetch_assoc()) { ?> 
-        <div class="top-text"><h1><?= $row['naam']; ?> </h1>
-        <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3></div>
-        <div class="container">
-        <div class="1"><div class="info-box"><b>Praktische informatie</b><p><?= $row[ 'max_deelnemers']; ?> max deelnemers<p>
+    .image-section img {
+      width: 200%;
+      border-radius: 30px;
+    }
+
+    .top-text {
+      text-align: center;
+      top: -10px;
+      right: 0;
+      font-size: 14px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .top-texta {
+      position: absolute;
+      top: -20px;
+      right: 0px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <?php while ($row = $resultaat->fetch_assoc()) { ?>
+    <div class="top-text">
+      <h1><?= $row['naam']; ?> </h1>
+      <h3 class="subtitle"><?= $row['beschrijving']; ?> </h3>
+    </div>
+    <div class="container">
+      <div class="1">
+        <div class="info-box"><b>Praktische informatie</b>
+          <p><?= $row['max_deelnemers']; ?> max deelnemers
+          <p>
           <p class="prijs">Prijs: €<?= $row['prijs']; ?></p>
+          <?php $date=date_create("$row[deadline_inschrijven]");
+         ?>
+          <p>deadline inschrijven: <?= date_format($date,"d/m H:i") ?></p>
         </div>
-      <?php }; ?>
-
-
-        <div class="wanneer">  
-          <h2>Waar en wanneer?</h2>
-          </div>
-          <div class="inputveld"><b>Wanneer</b></div>
+        <div class="wanneer">
+          <h2>Wanneer?</h2>
+        </div>
+       <?php $date=date_create("$row[starttijd]");
+         ?>
+        <div class="inputveld"><b><?= date_format($date,"d/m H:i")  ?></b></div>
       </div>
-        
 
-        <div class="2"><div class="image-section">
-         <div class="top-texta">Aantal aanmeldingen:</div>
-         <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
-        </div>
+    <?php }; ?>
+
+    <div class="2">
+      <div class="image-section">
+        <div class="top-texta">Aantal aanmeldingen:</div>
+        <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
+      </div>
 
       <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
-      </div>
     </div>
-  </body>
+    </div>
+</body>
 
-  </html>
+</html>
