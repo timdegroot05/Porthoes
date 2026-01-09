@@ -38,21 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personen_json = json_encode($personen);
 
     if ($email !== "") {
-      $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare("
     INSERT INTO inschrijvingen 
     (activity, name, email, kampeerplek, aantal_personen, personen_json)
     VALUES 
     (:activity, :name, :email, :kampeerplek, :aantal_personen, :personen_json)
 ");
 
-$stmt->execute([
-    ':activity'         => $activity,
-    ':name'             => $name,
-    ':email'            => $email,
-    ':kampeerplek'      => $kampeerplek,
-    ':aantal_personen'  => $aantal,
-    ':personen_json'    => $personen_json
-]);
+        $stmt->execute([
+            ':activity'         => $activity,
+            ':name'             => $name,
+            ':email'            => $email,
+            ':kampeerplek'      => $kampeerplek,
+            ':aantal_personen'  => $aantal,
+            ':personen_json'    => $personen_json
+        ]);
 
 
         $message = "Je bent ingeschreven voor <strong>" . htmlspecialchars($activity) . "</strong>!";
@@ -63,6 +63,7 @@ $stmt->execute([
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Inschrijven</title>
@@ -83,42 +84,44 @@ $stmt->execute([
         }
     </script>
 </head>
+
 <body>
 
-<h2>Inschrijven voor: <?= htmlspecialchars($activity) ?></h2>
+    <h2>Inschrijven voor: <?= htmlspecialchars($activity) ?></h2>
 
-<?= $message ?>
+    <?= $message ?>
 
-<form method="POST">
+    <form method="POST">
 
-    <input type="text" name="name" placeholder="Jouw naam"><br><br>
+        <input type="text" name="name" placeholder="Jouw naam"><br><br>
 
-    <input type="email" name="email" placeholder="Email (verplicht)" required><br><br>
+        <input type="email" name="email" placeholder="Email (verplicht)" required><br><br>
 
-    <label>Kampeerplek</label><br>
-    <select name="kampeerplek" required>
-        <?php for ($i = 1; $i <= 60; $i++): ?>
-            <option value="<?= $i ?>">Plek <?= $i ?></option>
-        <?php endfor; ?>
-    </select>
-    <br><br>
+        <label>Kampeerplek</label><br>
+        <select name="kampeerplek" required>
+            <?php for ($i = 1; $i <= 60; $i++): ?>
+                <option value="<?= $i ?>">Plek <?= $i ?></option>
+            <?php endfor; ?>
+        </select>
+        <br><br>
 
-    <label>Hoeveel personen wil je aanmelden?</label><br>
-    <select name="aantal" id="aantal" onchange="updatePersonFields()" required>
-        <?php for ($i = 1; $i <= 10; $i++): ?>
-            <option value="<?= $i ?>"><?= $i ?></option>
-        <?php endfor; ?>
-    </select>
-    <br><br>
+        <label>Hoeveel personen wil je aanmelden?</label><br>
+        <select name="aantal" id="aantal" onchange="updatePersonFields()" required>
+            <?php for ($i = 1; $i <= 10; $i++): ?>
+                <option value="<?= $i ?>"><?= $i ?></option>
+            <?php endfor; ?>
+        </select>
+        <br><br>
 
-    <div id="personenvelden"></div>
+        <div id="personenvelden"></div>
 
-    <button type="submit">Inschrijven</button>
-</form>
+        <button type="submit">Inschrijven</button>
+    </form>
 
-<script>
-    updatePersonFields(); // laat direct 1 persoon zien
-</script>
+    <script>
+        updatePersonFields(); // laat direct 1 persoon zien
+    </script>
 
 </body>
+
 </html>

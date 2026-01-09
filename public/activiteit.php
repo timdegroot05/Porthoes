@@ -64,7 +64,6 @@ $resultaat = $stmt->get_result();
       margin: 0;
       padding: 0;
       font-family: 'Arial', serif;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     }
 
     .container {
@@ -162,6 +161,8 @@ $resultaat = $stmt->get_result();
 
 <body>
 
+  <?php include __DIR__ . '/../includes/header.php'; ?>
+
 
   <?php while ($row = $resultaat->fetch_assoc()) { ?>
     <div class="top-text">
@@ -174,16 +175,16 @@ $resultaat = $stmt->get_result();
           <p><?= $row['max_deelnemers']; ?> max deelnemers
           <p>
           <p class="prijs">Prijs: €<?= $row['prijs']; ?></p>
-          <?php $date=date_create("$row[deadline_inschrijven]");
-         ?>
-          <p>deadline inschrijven: <?= date_format($date,"d/m H:i") ?></p>
+          <?php $date = date_create("$row[deadline_inschrijven]");
+          ?>
+          <p>deadline inschrijven: <?= date_format($date, "d/m H:i") ?></p>
         </div>
         <div class="wanneer">
           <h2>Wanneer?</h2>
         </div>
-       <?php $date=date_create("$row[starttijd]");
-         ?>
-        <div class="inputveld"><b><?= date_format($date,"d/m H:i")  ?></b></div>
+        <?php $date = date_create("$row[starttijd]");
+        ?>
+        <div class="inputveld"><b><?= date_format($date, "d/m H:i")  ?></b></div>
       </div>
 
     <?php }; ?>

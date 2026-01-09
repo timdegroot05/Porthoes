@@ -1,0 +1,12 @@
+:root {
+  /* Primary Colors */
+  /* deze kleur voor call to action */
+  --color-green: #658c6e;
+
+  --color-green-light: #85a898;
+  --color-beige: #eff9e8;
+
+  /* Secondary Colors */
+  --color-yellow: #f5e2b0;
+  --color-sand: #dfcd80;
+}
