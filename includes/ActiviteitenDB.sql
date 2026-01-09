@@ -11,9 +11,9 @@ CREATE TABLE Activiteiten (
     naam VARCHAR(100) NOT NULL,
     beschrijving TEXT,
     max_deelnemers INT,
-    max_deelnemers INT,
     doelgroep varchar(100),
-    prijs DECIMAL(10, 2)
+    prijs DECIMAL(10, 2),
+    tag VARCHAR(100)
 );
 
 -- Tabel voor activiteitstijden
@@ -53,88 +53,89 @@ CREATE TABLE Deelnemers (
     )
 );
 
-USE ActiviteitenDB;
-
 -- ============================
 -- 1. TESTDATA VOOR ACTIVITEITEN
 -- ============================
 INSERT INTO
-    Activiteiten (naam, beschrijving, max_deelnemers, prijs)
+    Activiteiten (naam, beschrijving, max_deelnemers, prijs, tag)
 VALUES
     (
         'zwembad',
         'Workshop boogschieten voor beginners',
         12,
-        25.00
+        25.00,
+        'geen reservering nodig'
     ),
     (
         'kampvuur',
         'Buitenklimwand activiteit',
         8,
-        40.00
+        40.00,
+        'geen reservering nodig'
     ),
     (
         'bingo',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'rustig'
     ),
     (
         'geitenyoga',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'fysiek'
     ),
     (
         'koe melken met nepkoe',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'voor jonge kinderen'
     ),
     (
         'koeien knuffelen',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'voor jonge kinderen'
     ),
     (
         'eieren rapen',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'voor jonge kinderen'
     ),
     (
         'tafeltennis toernooi',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'fysiek'
     ),
     (
         'tienkamp',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'fysiek'
     ),
     (
         'rondleiding',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'informatief'
     ),
     (
         'ijssalon',
         'Creatieve schilderworkshop met begeleiding',
         15,
-        30.00
+        30.00,
+        'eten & drinken'
     );
-
--- Bekijk activiteiten
-SELECT
-    *
-FROM
-    Activiteiten
-where
-    id = 4;
 
 -- ====================================
 -- 2. TESTDATA VOOR ACTIVITEITTIJDEN
@@ -207,3 +208,6 @@ CREATE TABLE IF NOT EXISTS inschrijvingen (
     personen_json TEXT NOT NULL,       
     aangemeld_op TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+select * from Activiteiten;
+
