@@ -103,11 +103,9 @@
 
     <nav>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Over ons</a></li>
-        <li><a href="#">Camping</a></li>
-        <li><a href="#">Activiteiten</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="activiteitenkaart.php">Home</a></li>
+        <li><a href="overzicht.php">Camping</a></li>
+        <li><a href="reserveringen.php">Reserveringen</a></li>
       </ul>
     </nav>
 
