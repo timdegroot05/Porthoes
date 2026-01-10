@@ -198,6 +198,8 @@ $resultaat = $stmt->get_result();
       <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
     </div>
     </div>
+
+  <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
 
 </html>
