@@ -9,7 +9,8 @@ USE ActiviteitenDB;
 CREATE TABLE Activiteiten (
     id INT PRIMARY KEY AUTO_INCREMENT,
     naam VARCHAR(100) NOT NULL,
-    beschrijving TEXT,
+    titel TEXT,
+    beschrijving varchar(100),
     max_deelnemers INT,
     doelgroep varchar(100),
     prijs DECIMAL(10, 2),
@@ -56,86 +57,94 @@ CREATE TABLE Deelnemers (
 -- ============================
 -- 1. TESTDATA VOOR ACTIVITEITEN
 -- ============================
-INSERT INTO
-    Activiteiten (naam, beschrijving, max_deelnemers, prijs, tag)
+INSERT INTO Activiteiten (naam, titel, beschrijving, max_deelnemers, prijs, tag)
 VALUES
     (
         'zwembad',
-        'Workshop boogschieten voor beginners',
+        'Lekker zwemmen op de camping!',
+        'Kom gezellig zwemmen op de camping! Ons verwarmde buitenzwembad biedt verkoeling en plezier voor jong en oud. Trek een paar baantje om actief bezig te zijn of dobber ontspannen op een luchtbed in de zon. Voor de kleintjes is er een ondiep peuterbad en ligstoelen staan klaar voor ouders die willen relaxen. Neem je handdoek en zonnebrand mee, en maak er een heerlijke zomerochtend of middag van – reserveren is niet nodig, dus duik er gewoon in!',
         12,
-        25.00,
+        5.00,
         'geen reservering nodig'
     ),
     (
         'kampvuur',
         'Buitenklimwand activiteit',
+        'Geniet van een sfeervolle avond rond het kampvuur! Terwijl het hout knispert en de vonken omhoog dansen, kun je marshmallows roosteren, liedjes zingen of gewoon gezellig kletsen met andere campinggasten. Het kampvuur is dé plek om verhalen te delen en te ontspannen onder de sterrenhemel. Er is geen reservering nodig — gewoon aanschuiven, een plekje zoeken op een boomstam of dekentje, en genieten van de warmte, geur en gezelligheid van het echte buitenleven.',
         8,
-        40.00,
+        0,
         'geen reservering nodig'
     ),
     (
         'bingo',
-        'Creatieve schilderworkshop met begeleiding',
+        'Een gezelig spel bingo, win je volgende jackpot!',
+        'Doe mee aan onze gezellige bingomiddag en maak kans op leuke prijzen of misschien zelfs de jackpot! Jong en oud kunnen meespelen in een ontspannen sfeer vol humor en spanning. Onze spelleider zorgt voor leuke rondes en verrassingen, dus ook als je geen prijs wint, beleef je gegarandeerd een plezierige tijd. Ideaal voor een rustige avond op de camping met vrienden of familie. Vergeet je bingokaart niet – wie weet heb jij straks alle vakjes vol!',
         15,
-        30.00,
+        5.00,
         'rustig'
     ),
     (
         'geitenyoga',
-        'Creatieve schilderworkshop met begeleiding',
+        'Een begeleide yoga sessie met geiten en een echte Yogi!',
+        'Ontdek de perfecte balans tussen ontspanning en speelsheid met onze unieke geitenyoga-sessie. Onder begeleiding van een ervaren yogi leer je eenvoudige houdingen terwijl lieve geiten om je heen scharrelen. Hun nieuwsgierige aanwezigheid zorgt voor glimlachen, ontspanning en verrassende interacties. De sessie is geschikt voor beginners én gevorderden, dus iedereen kan meedoen. Na afloop kun je nog even knuffelen of een foto maken met je nieuwe harige yogavrienden. Een heerlijke activiteit om lichaam en geest op te laden!',
         15,
-        30.00,
+        10.00,
         'fysiek'
     ),
     (
         'koe melken met nepkoe',
         'Creatieve schilderworkshop met begeleiding',
+        'Altijd al willen weten hoe het is om een koe te melken? Probeer het nu veilig en droog met onze realistische nepkoe! Een begeleider legt uit hoe het melken werkt en vertelt leuke weetjes over het boerenleven. Kinderen vinden het geweldig om te oefenen en ervaren even hoe een echte boer te werk gaat. Het is leerzaam, grappig en een perfecte activiteit voor gezinnen met jonge kinderen die meer willen leren over het leven op de boerderij.',
         15,
-        30.00,
+        5.00,
         'voor jonge kinderen'
     ),
     (
         'koeien knuffelen',
-        'Creatieve schilderworkshop met begeleiding',
+        'Kom knuffelen met ons zachte koeien!',
+        'Kom tot rust tussen onze lieve, rustige koeien! Onder begeleiding mag je kennismaken met deze zachtaardige dieren, ze borstelen en knuffelen. Koeienknuffelen is niet alleen schattig maar ook verrassend ontspannend: hun kalme ademhaling en warme vacht helpen stress direct te verminderen. Het is een bijzondere ervaring voor jong en oud, ideaal voor dierenvrienden en gezinnen. Trek oude kleren aan en ontdek hoe fijn het is om even écht dicht bij de natuur te zijn.',
         15,
-        30.00,
+        4.00,
         'voor jonge kinderen'
     ),
     (
         'eieren rapen',
-        'Creatieve schilderworkshop met begeleiding',
+        'Kom eieren verzamelen wie weet kan je een lekker ommeletje maken!',
+        'Word boer voor een ochtend en help mee met het rapen van verse eieren bij onze kippen! De kinderen leren op speelse wijze waar hun ontbijt vandaan komt en mogen de eieren natuurlijk zelf verzamelen. Soms scharrelt er een kip naast je of ontdek je een ei op een onverwachte plek. De activiteit is gratis, leerzaam en vooral erg leuk voor jonge gezinnen. Wie weet kun je later in de keuken nog een heerlijk omeletje maken met je eigen vondst!',
         15,
-        30.00,
+        0,
         'voor jonge kinderen'
     ),
     (
         'tafeltennis toernooi',
-        'Creatieve schilderworkshop met begeleiding',
+        'Ben jij ons volgende tafeltennis kampioen?',
+        'Ben jij de ster van het pingpongbatje? Schrijf je in voor ons spannende tafeltennistoernooi en laat je skills zien! Iedereen kan meedoen — van beginners tot fanatieke spelers. We spelen in een gezellige sfeer met korte wedstrijden, zodat iedereen meerdere keren aan de beurt komt. Het draait niet alleen om winnen maar vooral om plezier en sportiviteit. Kom meedoen, moedig je vrienden aan, en strijd om de titel van campingkampioen tafeltennis!',
         15,
-        30.00,
+        10.00,
         'fysiek'
     ),
     (
         'tienkamp',
-        'Creatieve schilderworkshop met begeleiding',
+        'Een atletiekonderdeel voor mannen waarbij atleten in twee dagen tijd tien verschillende disciplines afleggen!',
+        'Test je uithoudingsvermogen met onze uitdagende tienkamp! Verspreid over twee dagen nemen deelnemers het tegen elkaar op in tien sportieve disciplines, variërend van sprint tot kogelstoten. Zowel kracht, snelheid als behendigheid worden op de proef gesteld, maar ook doorzettingsvermogen en teamgeest zijn belangrijk. Met begeleiding en aanmoediging van andere kampeerders is het altijd een sportief feest. Een geweldige manier om actief bezig te zijn, nieuwe mensen te ontmoeten en je grenzen te verleggen!',
         15,
-        30.00,
+        10.00,
         'fysiek'
     ),
     (
         'rondleiding',
-        'Creatieve schilderworkshop met begeleiding',
+        'Leer de camping van boer Bert goed kennen!',
+        'Ga op ontdekking met boer Bert en leer alles over onze camping en het boerenleven! Tijdens deze informatieve rondleiding kom je op plekken waar je normaal niet komt en hoor je leuke verhalen over de dieren, de velden en het werk op de boerderij. Voor kinderen is het spannend en leerzaam, voor ouders interessant en ontspannend. Ideaal om een keer mee te maken tijdens je verblijf. Trek stevige schoenen aan en loop gezellig mee!',
         15,
-        30.00,
+        0,
         'informatief'
     ),
     (
         'ijssalon',
-        'Creatieve schilderworkshop met begeleiding',
-        15,
-        30.00,
-        'eten & drinken'
+        'Kom een lekker ijsje eten gemaakt met eigen room!',
+        'Trakteer jezelf op een heerlijk ijsje in onze eigen ijssalon! Het roomijs wordt gemaakt met melk en room van onze boerderijdieren, vers en vol van smaak. Kies uit diverse smaken, van klassiek vanille tot verrassende seizoensspecials. Ideaal voor een warme zomerdag of als afsluiter na een leuke activiteit. Kinderen kunnen hun ijsje versieren en volwassenen genieten van een rustig terrasje met uitzicht over de weide. Een smakelijke stop die je zeker niet wilt missen!'
     );
+
 
 -- ====================================
 -- 2. TESTDATA VOOR ACTIVITEITTIJDEN
