@@ -21,42 +21,28 @@ $sql = "SELECT
     a.naam,
     a.titel,
     a.beschrijving,
-    a.doelgroep,
+    a.banner,
     a.prijs,
     a.tag,
     a.max_deelnemers,
-
     t.id AS tijd_id,
     t.deadline_inschrijven,
     t.starttijd,
     t.eindtijd,
     t.status,
-
     COALESCE(SUM(r.aantal_personen), 0) AS plaatsen_ingenomen,
-    (a.max_deelnemers - COALESCE(SUM(r.aantal_personen), 0)) AS plaatsen_over
+    CASE 
+        WHEN t.id IS NULL THEN a.max_deelnemers 
+        ELSE (a.max_deelnemers - COALESCE(SUM(r.aantal_personen), 0)) 
+    END AS plaatsen_over
 FROM Activiteiten a
-JOIN ActiviteitTijden t 
-    ON a.id = t.activiteit_id
-LEFT JOIN Reserveringen r 
-    ON r.activiteittijd_id = t.id
-    AND r.status = 'bevestigd'
+LEFT JOIN ActiviteitTijden t ON a.id = t.activiteit_id
+LEFT JOIN Reserveringen r ON r.activiteittijd_id = t.id AND r.status = 'bevestigd'
 WHERE a.id = ?
 GROUP BY 
-    a.id,
-    a.naam,
-    a.titel,
-    a.beschrijving,
-    a.doelgroep,
-    a.prijs,
-    a.tag,
-    a.max_deelnemers,
-    t.id,
-    t.deadline_inschrijven,
-    t.starttijd,
-    t.eindtijd,
-    t.status
-ORDER BY t.starttijd;
-
+    a.id, a.naam, a.titel, a.beschrijving, a.banner, a.prijs, a.tag, a.max_deelnemers,
+    t.id, t.deadline_inschrijven, t.starttijd, t.eindtijd, t.status
+ORDER BY COALESCE(t.starttijd, '9999-12-31 23:59:59');
 ";
 
 $stmt = $conn->prepare($sql);
@@ -79,7 +65,7 @@ $resultaat = $stmt->get_result();
 
     <?php while ($row = $resultaat->fetch_assoc()) { ?>
 
-        <section class="hero">
+        <section class="hero" style="background-image: url('images/activiteiten_banners/<?= $row['banner'] ?>');">
             <div class="hero-content">
                 <h1><?= $row['naam']; ?></h1>
                 <p><?= $row['titel']; ?></p>
@@ -123,7 +109,8 @@ $resultaat = $stmt->get_result();
 
                         <div class="price">€<?= $row['prijs']; ?></div>
 
-                        <button class="register-btn">Nu Inschrijven</button>
+                        <a href="reserveer.php?id=<?= $row['activiteit_id'] ?>">
+                            <button class="register-btn">Nu Inschrijven</button></a>
                     </aside>
                 </div>
             </div>
@@ -162,11 +149,14 @@ $resultaat = $stmt->get_result();
 
     /* Hero Section */
     .hero {
-        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect fill="%237c9473" width="1200" height="400"/></svg>');
+        /* background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect fill="%237c9473" width="1200" height="400"/></svg>'); */
+        /* background-image: url('images/activiteiten_banners/bingo.png'); */
         background-size: cover;
         background-position: center;
         color: white;
-        padding: 6rem 2rem;
+        padding: 2rem;
+        /* 4rem om te compenseren voor de container */
+        padding-bottom: calc(2rem + 4rem);
         text-align: center;
         position: relative;
     }
