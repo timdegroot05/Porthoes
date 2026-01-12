@@ -255,7 +255,7 @@ input:focus-visible{
   </form>
 
   <div class="login-footer">
-    <a href="../index.php">← Terug naar website</a>
+    <a href="../activiteitenKaart.php">← Terug naar website</a>
   </div>
 </div>
 
