@@ -64,9 +64,12 @@ $result = $conn->query($sql);
     }
     ?>
 
-    <div class="map-wrapper">
-        <div id="map" style="background-image: url('<?= htmlspecialchars($mapImage) ?>');"></div>
-        <div id="pins" aria-hidden="false"></div>
+    <div class="map-wrapper" id="map-wrapper">
+        <div id="map">
+            <img id="map-image" src="<?= htmlspecialchars($mapImage) ?>" alt="Map">
+            <button id="fullscreen-toggle" class="fullscreen-btn" aria-label="Toggle fullscreen">⤢</button>
+            <div id="pins" aria-hidden="false"></div>
+        </div>
     </div>
 
     <noscript>
@@ -83,7 +86,11 @@ $result = $conn->query($sql);
         const pins = <?php echo json_encode($pins, JSON_HEX_TAG); ?>;
 
         document.addEventListener('DOMContentLoaded', () => {
+            const mapWrapper = document.getElementById('map-wrapper');
+            const mapEl = document.getElementById('map');
+            const mapImg = document.getElementById('map-image');
             const pinsContainer = document.getElementById('pins');
+            const fsBtn = document.getElementById('fullscreen-toggle');
             const activityById = {};
             activities.forEach(a => activityById[a.id] = a);
 
@@ -94,8 +101,9 @@ $result = $conn->query($sql);
                 const el = document.createElement('button');
                 el.type = 'button';
                 el.className = 'pin';
-                el.style.left = pin.x + '%';
-                el.style.top = pin.y + '%';
+                // store percent coords; we will convert to pixel positions later
+                el.dataset.x = pin.x;
+                el.dataset.y = pin.y;
                 const activity = pin.activity_id ? activityById[pin.activity_id] : null;
                 const title = activity ? activity.naam : (pin.label || pin.image);
                 el.title = title;
@@ -117,10 +125,30 @@ $result = $conn->query($sql);
                 return el;
             }
 
+            function positionPins() {
+                if (!mapImg || !pinsContainer) return;
+                const imgRect = mapImg.getBoundingClientRect();
+                const mapRect = mapEl.getBoundingClientRect();
+                const offsetLeft = imgRect.left - mapRect.left;
+                const offsetTop = imgRect.top - mapRect.top;
+                const imgW = imgRect.width;
+                const imgH = imgRect.height;
+                if (imgW === 0 || imgH === 0) return;
+
+                Array.from(pinsContainer.children).forEach(el => {
+                    const x = parseFloat(el.dataset.x);
+                    const y = parseFloat(el.dataset.y);
+                    if (isNaN(x) || isNaN(y)) return;
+                    const leftPx = offsetLeft + (x / 100) * imgW;
+                    const topPx = offsetTop + (y / 100) * imgH;
+                    el.style.left = leftPx + 'px';
+                    el.style.top = topPx + 'px';
+                });
+            }
+
             function renderPins(filterTag = '') {
                 clearPins();
                 pins.forEach(pin => {
-                    // determine pin tag: explicit tag, or activity tag if linked
                     let pinTag = pin.tag || (pin.activity_id && activityById[pin.activity_id] ? activityById[pin.activity_id].tag : '');
                     if (filterTag && filterTag !== '') {
                         if (!pinTag || pinTag.indexOf(filterTag) === -1) return;
@@ -128,7 +156,32 @@ $result = $conn->query($sql);
                     const pEl = createPinElement(pin);
                     if (pEl) pinsContainer.appendChild(pEl);
                 });
+
+                if (mapImg.complete && mapImg.naturalWidth !== 0) {
+                    positionPins();
+                } else {
+                    mapImg.addEventListener('load', positionPins, { once: true });
+                    setTimeout(positionPins, 50);
+                }
             }
+
+            // fullscreen toggle
+            fsBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    mapWrapper.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen().catch(() => {});
+                }
+            });
+
+            document.addEventListener('fullscreenchange', () => {
+                positionPins();
+                if (document.fullscreenElement) fsBtn.textContent = '⤡';
+                else fsBtn.textContent = '⤢';
+            });
+
+            window.addEventListener('resize', positionPins);
+            window.addEventListener('orientationchange', positionPins);
 
             // apply initial filter based on ?tag= in URL if present
             const params = new URLSearchParams(window.location.search);
@@ -169,30 +222,57 @@ $result = $conn->query($sql);
 
 <style>
     .map-wrapper {
-        position: relative;
-        width: 100%;
-        height: 75%;
-        margin: 5rem;
+        max-width: 1200px;
+        width: calc(100% - 4rem);
+        margin: 2rem auto;
         box-sizing: border-box;
     }
 
     #map {
+        position: relative;
         width: 100%;
-        height: 100%;
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
         border-radius: 6px;
         background-color: #f8f8f8;
+        overflow: hidden;
+    }
+
+    #map img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
     }
 
     #pins {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        inset: 0;
         pointer-events: none; /* allow pointer events on pin children */
+    }
+
+    .fullscreen-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 3;
+        background: rgba(255,255,255,0.85);
+        border: none;
+        border-radius: 4px;
+        padding: 6px 8px;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .map-wrapper:fullscreen, .map-wrapper:-webkit-full-screen {
+        width: 100vw !important;
+        height: 100vh !important;
+        margin: 0 !important;
+        max-width: none;
+    }
+
+    .map-wrapper:fullscreen #map img, .map-wrapper:-webkit-full-screen #map img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
 
     .pin {
