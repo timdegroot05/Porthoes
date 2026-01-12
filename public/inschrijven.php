@@ -191,12 +191,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 2rem;
         }
     }
+
+    /* Terug naar home knop */
+.back-button {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: var(--groen-donker);
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: background 0.3s, transform 0.2s;
+    z-index: 1000;
+}
+
+.back-button:hover {
+    background: var(--groen-licht);
+    transform: translateY(-2px);
+}
+
 </style>
 </head>
 
 <body>
 
 <h2>Inschrijven</h2>
+
+<a href="activiteitenKaart.php" class="back-button">Terug naar home</a>
+
 
 <?php if($message): ?>
     <div class="message"><?= $message ?></div>
