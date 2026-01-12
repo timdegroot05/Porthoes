@@ -11,17 +11,22 @@ try {
     die("Database fout: " . $e->getMessage());
 }
 
-$activity = isset($_GET['act']) ? $_GET['act'] : "onbekend";
-$message = "";
+// Haal alle activiteiten op
+$activiteiten = $pdo->query("SELECT naam FROM Activiteiten ORDER BY naam")->fetchAll(PDO::FETCH_ASSOC);
+
+// --- Success message ophalen als redirect is geweest ---
+$message = '';
+if (isset($_GET['success'])) {
+    $message = "Je bent ingeschreven voor " . htmlspecialchars($_GET['success']) . "!";
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    $activity = $_POST['activity'] ?? "onbekend";
     $name  = trim($_POST['name']);
     $email = trim($_POST['email']);
     $kampeerplek  = intval($_POST['kampeerplek']);
     $aantal = intval($_POST['aantal']);
 
-    // Personen opslaan in array
     $personen = [];
     for ($i = 1; $i <= $aantal; $i++) {
         $pnaam = $_POST["persoon_naam_$i"] ?? "";
@@ -34,82 +39,183 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Convert naar JSON voor database
     $personen_json = json_encode($personen);
 
-    if ($email !== "") {
-      $stmt = $pdo->prepare("
-    INSERT INTO inschrijvingen 
-    (activity, name, email, kampeerplek, aantal_personen, personen_json)
-    VALUES 
-    (:activity, :name, :email, :kampeerplek, :aantal_personen, :personen_json)
-");
+    if ($email !== "" && $activity !== "") {
+        $stmt = $pdo->prepare("
+            INSERT INTO inschrijvingen 
+            (activity, name, email, kampeerplek, aantal_personen, personen_json)
+            VALUES 
+            (:activity, :name, :email, :kampeerplek, :aantal_personen, :personen_json)
+        ");
+        $stmt->execute([
+            ':activity' => $activity,
+            ':name' => $name,
+            ':email' => $email,
+            ':kampeerplek' => $kampeerplek,
+            ':aantal_personen' => $aantal,
+            ':personen_json' => $personen_json
+        ]);
 
-$stmt->execute([
-    ':activity'         => $activity,
-    ':name'             => $name,
-    ':email'            => $email,
-    ':kampeerplek'      => $kampeerplek,
-    ':aantal_personen'  => $aantal,
-    ':personen_json'    => $personen_json
-]);
-
-
-        $message = "Je bent ingeschreven voor <strong>" . htmlspecialchars($activity) . "</strong>!";
+        // --- DE FIX: redirect na POST ---
+        header("Location: " . $_SERVER['PHP_SELF'] . "?success=" . urlencode($activity));
+        exit; // exit na header redirect is verplicht
     } else {
-        $message = "Vul een emailadres in!";
+        $message = " Vul alle verplichte velden in!";
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>Inschrijven</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inschrijven</title>
+<style>
+    /* Kleurenpalet boers warm */
+    :root {
+        --groen-donker: #658C6E;
+        --groen-licht: #85A898;
+        --crème-licht: #EFF9E8;
+        --crème-medium: #F5E2B0;
+        --crème-donker: #DFCD80;
+    }
 
-    <script>
-        function updatePersonFields() {
-            let aantal = document.getElementById("aantal").value;
-            let container = document.getElementById("personenvelden");
-            container.innerHTML = "";
+    * {
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-            for (let i = 1; i <= aantal; i++) {
-                container.innerHTML += `
-                    <h4>Persoon ${i}</h4>
-                    <input type="text" name="persoon_naam_${i}" placeholder="Naam persoon ${i}" required><br><br>
-                    <input type="number" name="persoon_leeftijd_${i}" placeholder="Leeftijd persoon ${i}" required><br><br>
-                `;
-            }
+    body {
+        margin: 0;
+        padding: 1rem;
+        background: var(--crème-licht);
+        color: #2f3e34;
+    }
+
+    h2 {
+        text-align: center;
+        color: var(--groen-donker);
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    form {
+        max-width: 520px;
+        margin: auto;
+        background: var(--crème-medium);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 0.7rem;
+        margin-bottom: 1rem;
+        border-radius: 6px;
+        border: 1px solid var(--groen-licht);
+        background: var(--crème-licht);
+        font-size: 1rem;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: var(--groen-donker);
+        background: #ffffff;
+    }
+
+    button {
+        width: 100%;
+        padding: 0.8rem;
+        background: var(--groen-donker);
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background: var(--groen-licht);
+    }
+
+    #personenvelden h4 {
+        margin: 0.6rem 0 0.4rem;
+        font-size: 0.95rem;
+        color: #2f3e34;
+    }
+
+    #personenvelden input {
+        margin-bottom: 0.6rem;
+    }
+
+    .message {
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        padding: 0.5rem;
+        border-radius: 6px;
+        background: var(--crème-donker);
+        color: #2f3e34;
+    }
+
+    @media (min-width: 768px) {
+        form {
+            padding: 2rem;
         }
-    </script>
+    }
+</style>
 </head>
 <body>
 
-<h2>Inschrijven voor: <?= htmlspecialchars($activity) ?></h2>
+<h2>Inschrijven</h2>
 
-<?= $message ?>
+<?php if($message): ?>
+    <div class="message"><?= $message ?></div>
+<?php endif; ?>
 
 <form method="POST">
+    <label for="activity">Activiteit</label>
+    <select name="activity" id="activity" required>
+        <option value="">-- Kies een activiteit --</option>
+        <?php foreach ($activiteiten as $act): ?>
+            <option value="<?= htmlspecialchars($act['naam']) ?>">
+                <?= htmlspecialchars(ucfirst($act['naam'])) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
-    <input type="text" name="name" placeholder="Jouw naam"><br><br>
+    <label for="name">Naam</label>
+    <input type="text" id="name" name="name" required>
 
-    <input type="email" name="email" placeholder="Email (verplicht)" required><br><br>
+    <label for="email">E-mail (Verplicht)</label>
+    <input type="email" id="email" name="email" required>
 
-    <label>Kampeerplek</label><br>
-    <select name="kampeerplek" required>
+    <label for="kampeerplek">Kampeerplek</label>
+    <select name="kampeerplek" id="kampeerplek" required>
         <?php for ($i = 1; $i <= 60; $i++): ?>
             <option value="<?= $i ?>">Plek <?= $i ?></option>
         <?php endfor; ?>
     </select>
-    <br><br>
 
-    <label>Hoeveel personen wil je aanmelden?</label><br>
+    <label for="aantal">Hoeveel personen wil je aanmelden?</label>
     <select name="aantal" id="aantal" onchange="updatePersonFields()" required>
         <?php for ($i = 1; $i <= 10; $i++): ?>
             <option value="<?= $i ?>"><?= $i ?></option>
         <?php endfor; ?>
     </select>
-    <br><br>
 
     <div id="personenvelden"></div>
 
@@ -117,7 +223,19 @@ $stmt->execute([
 </form>
 
 <script>
-    updatePersonFields(); // laat direct 1 persoon zien
+function updatePersonFields() {
+    let aantal = document.getElementById("aantal").value;
+    let container = document.getElementById("personenvelden");
+    container.innerHTML = "";
+    for (let i = 1; i <= aantal; i++) {
+        container.innerHTML += `
+            <h4>Persoon ${i}</h4>
+            <input type="text" name="persoon_naam_${i}" placeholder="Naam persoon ${i}" required>
+            <input type="number" name="persoon_leeftijd_${i}" placeholder="Leeftijd persoon ${i}" required>
+        `;
+    }
+}
+updatePersonFields();
 </script>
 
 </body>
