@@ -20,6 +20,13 @@ $result = $conn->query($sql);
 
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
+<div class="hero">
+    <img src="images/tent.png" alt="Tent" class="hero-img">
+    <div class="hero-overlay">
+        <h1 class="hero-title">Camping Boer Bert</h1>
+    </div>
+</div>
+
 <div class="activiteiten-body">
 
     <!-- <div class="sidebar"> -->
@@ -221,6 +228,43 @@ $result = $conn->query($sql);
 </html>
 
 <style>
+    .hero {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        margin: 0 auto 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .hero-img {
+        display: block;
+        width: 100%;
+        height: clamp(160px, 30vw, 320px); /* responsive height */
+        object-fit: cover;
+        filter: brightness(60%);
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none; /* allow clicks through */
+    }
+
+    .hero-title {
+        color: #fff;
+        font-weight: 700;
+        font-size: clamp(22px, 3.5vw, 44px);
+        margin: 0;
+        padding: 0.2rem 0.6rem;
+        background: transparent; /* removed dark background per request */
+        border-radius: 0;
+        text-align: center;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
     .map-wrapper {
         max-width: 1200px;
         width: calc(100% - 4rem);
@@ -315,7 +359,8 @@ $result = $conn->query($sql);
         /* background-image: url(../public/images/Map_v2_taller.png); */
         background-size: cover;
         height: 100vh;
-        width: 100vw;
+        width: 100%;
+        overflow-x: hidden;
         background-repeat: no-repeat;
     }
 
