@@ -2,41 +2,33 @@
 session_start();
 
 if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    header('Location: admin_login.php');
+    header("Location: admin_login.php");
     exit;
 }
 
 require_once __DIR__ . '/../../includes/db.php';
 
-$errors = [];
-$id = (int)($_GET['id'] ?? 0);
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$isEdit = $id > 0;
 
+$errors = [];
 $naam = '';
 $beschrijving = '';
 $max_deelnemers = '';
 $prijs = '';
 
-$isEdit = $id > 0;
-
-// Bij bewerken: huidige data ophalen
-if ($isEdit && $_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($isEdit) {
     $stmt = $conn->prepare("SELECT naam, beschrijving, max_deelnemers, prijs FROM Activiteiten WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
-    $res = $stmt->get_result();
-    $data = $res->fetch_assoc();
-
-    if (!$data) {
+    $stmt->bind_result($naam, $beschrijving, $max_deelnemers, $prijs);
+    if (!$stmt->fetch()) {
+        $stmt->close();
         die("Activiteit niet gevonden.");
     }
-
-    $naam = $data['naam'] ?? '';
-    $beschrijving = $data['beschrijving'] ?? '';
-    $max_deelnemers = $data['max_deelnemers'] ?? '';
-    $prijs = $data['prijs'] ?? '';
+    $stmt->close();
 }
 
-// Opslaan (toevoegen of updaten)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $naam = trim($_POST['naam'] ?? '');
     $beschrijving = trim($_POST['beschrijving'] ?? '');
@@ -67,13 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 SET naam = ?, beschrijving = ?, max_deelnemers = ?, prijs = ?
                 WHERE id = ?
             ");
-            // i en d kunnen niet null zonder extra werk; dus zetten we lege velden naar 0 of NULL via workaround:
-            // Simpel: als je NULL wilt toestaan, maak max_deelnemers/prijs in DB NULLable.
+            // Workaround: als je NULL wilt toestaan, maak kolommen NULLable.
             $max_db = $max_int ?? 0;
             $prijs_db = $prijs_val ?? 0.00;
 
             $stmt->bind_param("ssidi", $naam, $beschrijving, $max_db, $prijs_db, $id);
             $stmt->execute();
+            $stmt->close();
         } else {
             $stmt = $conn->prepare("
                 INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs)
@@ -84,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt->bind_param("ssid", $naam, $beschrijving, $max_db, $prijs_db);
             $stmt->execute();
+            $stmt->close();
         }
 
         header("Location: admin_activiteiten.php");
@@ -95,10 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></title>
-</head>
 
-<style>
+  <!-- Styling in-file (kleurblindvriendelijk + sterke contrasten) -->
+  <style>
     :root{
       /* Palette (uit je figma voorbeeld) */
       --green-dark:#658C6E;
@@ -321,46 +315,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       *{ transition:none !important; }
     }
   </style>
-
+</head>
 <body>
-  <h1><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></h1>
+<div class="container">
 
-  <p><a href="admin_activiteiten.php">← Terug naar overzicht</a></p>
+  <div class="page-intro">
+    <div>
+      <h1 class="page-title"><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></h1>
+      <p class="page-subtitle">
+        Vul de velden in en sla op. Velden met een markering zijn verplicht.
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="admin_activiteiten.php">← Terug</a>
+    </div>
+  </div>
 
-  <?php if (!empty($errors)): ?>
-    <ul style="color:red;">
-      <?php foreach ($errors as $e): ?>
-        <li><?= htmlspecialchars($e) ?></li>
-      <?php endforeach; ?>
-    </ul>
-  <?php endif; ?>
+  <div class="card">
+    <div class="card-header">
+      <strong>Gegevens</strong>
+    </div>
+    <div class="card-body">
 
-  <form method="post">
-    <label>
-      Naam*:<br>
-      <input type="text" name="naam" value="<?= htmlspecialchars($naam) ?>" required>
-    </label>
-    <br><br>
+      <?php if (!empty($errors)): ?>
+        <div class="errors" role="alert" aria-live="polite">
+          <p class="errors-title"><span class="icon">!</span>Controleer de volgende punten</p>
+          <ul>
+            <?php foreach ($errors as $e): ?>
+              <li><?= htmlspecialchars($e) ?></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      <?php endif; ?>
 
-    <label>
-      Beschrijving:<br>
-      <textarea name="beschrijving" rows="5" cols="40"><?= htmlspecialchars($beschrijving) ?></textarea>
-    </label>
-    <br><br>
+      <form method="post">
+        <div class="form-grid">
+          <div>
+            <label class="required">
+              <span class="dot" aria-hidden="true"></span>
+              Naam <span aria-hidden="true">*</span>
+            </label>
+            <span class="hint">Korte, duidelijke titel van de activiteit.</span>
+            <input type="text" name="naam" value="<?= htmlspecialchars($naam) ?>" required>
+          </div>
 
-    <label>
-      Max deelnemers:<br>
-      <input type="number" name="max_deelnemers" min="0" value="<?= htmlspecialchars((string)$max_deelnemers) ?>">
-    </label>
-    <br><br>
+          <div>
+            <label>Beschrijving</label>
+            <span class="hint">Optioneel: wat houdt de activiteit in?</span>
+            <textarea name="beschrijving"><?= htmlspecialchars($beschrijving) ?></textarea>
+          </div>
 
-    <label>
-      Prijs (bijv 0.00):<br>
-      <input type="text" name="prijs" value="<?= htmlspecialchars((string)$prijs) ?>">
-    </label>
-    <br><br>
+          <div class="row-2">
+            <div>
+              <label>Max deelnemers</label>
+              <span class="hint">Laat leeg als dit niet van toepassing is.</span>
+              <input type="number" name="max_deelnemers" min="0" value="<?= htmlspecialchars((string)$max_deelnemers) ?>">
+            </div>
 
-    <button type="submit"><?= $isEdit ? 'Opslaan' : 'Toevoegen' ?></button>
-  </form>
+            <div>
+              <label>Prijs</label>
+              <span class="hint">Gebruik bijvoorbeeld 0.00 (of 0,00).</span>
+              <input type="text" name="prijs" value="<?= htmlspecialchars((string)$prijs) ?>">
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-actions">
+          <button class="btn btn-primary" type="submit"><?= $isEdit ? 'Opslaan' : 'Toevoegen' ?></button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
 </body>
 </html>

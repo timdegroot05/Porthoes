@@ -12,19 +12,20 @@ if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
 require_once __DIR__ . '/../../includes/db.php';
 
-$result = $conn->query("SELECT id, naam, max_deelnemers, prijs FROM Activiteiten ORDER BY id DESC");
-if (!$result) {
-    die("Query fout: " . $conn->error);
-}
+$result = $conn->query("
+    SELECT id, naam, max_deelnemers, prijs 
+    FROM Activiteiten 
+    ORDER BY id DESC
+");
 ?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Activiteiten beheren</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activiteiten beheren</title>
 
-
-    <style>
+<style>
 /* =========================
    KLEURENPALET (FIGMA)
    ========================= */
@@ -42,6 +43,7 @@ if (!$result) {
   --shadow: 0 10px 24px rgba(69,62,62,.12);
   --radius:16px;
 
+  /* toegankelijkheid */
   --focus:#1d4ed8;
   --danger:#7a2e2e;
 }
@@ -58,40 +60,55 @@ body{
     linear-gradient(180deg, var(--bg), #fff 70%);
   min-height:100vh;
   padding:28px 16px 44px;
-
-  /* 🔹 GROTER & LEESBAARDER */
-  font-size:16px;
-  line-height:1.6;
-  font-weight:500;
 }
 
 /* =========================
-   PAGE INTRO
+   LAYOUT
    ========================= */
+.container{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.page-intro{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:18px;
+  background:rgba(255,255,255,.8);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
 .page-title{
   margin:0;
-  font-size:26px;        /* was 22px */
-  font-weight:800;
+  font-size:22px;
 }
 
 .page-subtitle{
-  margin-top:8px;
-  font-size:15px;        /* was 13px */
-  font-weight:500;
-  color:rgba(69,62,62,.8);
+  margin-top:6px;
+  font-size:13px;
+  color:rgba(69,62,62,.75);
   max-width:70ch;
 }
 
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 /* =========================
-   BUTTONS
+   BUTTONS (niet alleen kleur)
    ========================= */
 .btn{
   display:inline-flex;
   align-items:center;
   gap:8px;
-  padding:12px 16px;     /* iets groter */
-  font-size:14px;
-  font-weight:800;       /* dikker */
+  padding:10px 14px;
+  font-size:13px;
+  font-weight:700;
   border-radius:12px;
   border:1.5px solid var(--border);
   background:var(--surface);
@@ -102,9 +119,56 @@ body{
   transition:.15s;
 }
 
+.btn:hover{
+  background:rgba(239,249,232,.9);
+}
+
+.btn-primary{
+  background:linear-gradient(
+    180deg,
+    rgba(101,140,110,.25),
+    rgba(133,168,152,.25)
+  );
+  border-color:rgba(101,140,110,.5);
+}
+
+.btn-danger{
+  background:rgba(122,46,46,.08);
+  border-color:rgba(122,46,46,.45);
+}
+
+.btn-danger:hover{
+  background:rgba(122,46,46,.14);
+}
+
+/* keyboard focus */
+a:focus-visible,
+button:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:2px;
+}
+
 /* =========================
-   TABLE
+   CARD + TABLE
    ========================= */
+.card{
+  margin-top:18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.table-wrap{ overflow:auto; }
+
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  min-width:760px;
+}
+
 thead th{
   position:sticky;
   top:0;
@@ -114,37 +178,47 @@ thead th{
     rgba(223,205,128,.5)
   );
   text-transform:uppercase;
-  font-size:12px;        /* was 11px */
-  font-weight:800;
-  letter-spacing:.1em;
-  padding:16px;
+  font-size:11px;
+  letter-spacing:.08em;
+  padding:14px;
   border-bottom:1px solid var(--border);
   text-align:left;
 }
 
 tbody td{
-  padding:16px;
+  padding:14px;
   border-bottom:1px solid rgba(69,62,62,.12);
-  font-size:15px;        /* was 14px */
-  font-weight:500;
+  font-size:14px;
+}
+
+tbody tr:nth-child(even){
+  background:rgba(239,249,232,.55);
+}
+
+tbody tr:hover{
+  background:rgba(133,168,152,.2);
+  box-shadow:inset 0 0 0 2px rgba(101,140,110,.25);
+}
+
+.col-actions{
+  white-space:nowrap;
 }
 
 /* =========================
-   BADGE & PRIJS
+   UI ELEMENTEN
    ========================= */
 .badge{
   display:inline-block;
-  padding:7px 12px;
+  padding:6px 10px;
   border-radius:999px;
-  font-size:13px;
-  font-weight:900;       /* extra duidelijk */
+  font-size:12px;
+  font-weight:800;
   background:rgba(245,226,176,.45);
   border:1px solid rgba(69,62,62,.2);
 }
 
 .price{
-  font-weight:900;
-  font-size:15px;
+  font-weight:800;
   font-variant-numeric:tabular-nums;
 }
 
@@ -175,47 +249,74 @@ form.inline{ display:inline; }
   *{ transition:none !important; }
 }
 </style>
-
 </head>
+
 <body>
-  <h1>Activiteiten beheren</h1>
+<div class="container">
 
-  <p>
-    <a href="admin_dashboard.php">← Terug naar dashboard</a> |
-    <a href="admin_activiteit_form.php">+ Nieuwe activiteit</a>
-  </p>
+  <div class="page-intro">
+    <div>
+      <h1 class="page-title">Activiteiten beheren</h1>
+      <p class="page-subtitle">
+        Beheer activiteiten. De interface gebruikt hoog contrast en duidelijke focus-staten
+        zodat hij goed werkt bij kleurenblindheid en toetsenbordgebruik.
+      </p>
+    </div>
 
-  <table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Naam</th>
-        <th>Max deelnemers</th>
-        <th>Prijs</th>
-        <th>Acties</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-          <td><?= (int)$row['id'] ?></td>
-          <td><?= htmlspecialchars($row['naam']) ?></td>
-          <td><?= htmlspecialchars((string)$row['max_deelnemers']) ?></td>
-          <td>€ <?= htmlspecialchars((string)$row['prijs']) ?></td>
-          <td>
-            <a href="admin_activiteit_form.php?id=<?= (int)$row['id'] ?>">Bewerken</a>
-            
-                <form method="post" action="admin_activiteit_delete.php" style="display:inline;"
-                    onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?');">
-                <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
-                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                <button type="submit">Verwijderen</button>
+    <div class="actions">
+      <a href="admin_dashboard.php" class="btn">← Dashboard</a>
+      <a href="admin_activiteit_form.php" class="btn btn-primary">
+        + Nieuwe activiteit
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Naam</th>
+            <th>Max. deelnemers</th>
+            <th>Prijs</th>
+            <th class="col-actions">Acties</th>
+          </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = $result->fetch_assoc()): ?>
+          <tr>
+            <td><?= (int)$row['id'] ?></td>
+            <td><?= htmlspecialchars($row['naam']) ?></td>
+            <td><span class="badge"><?= (int)$row['max_deelnemers'] ?></span></td>
+            <td class="price">€ <?= number_format($row['prijs'], 2, ',', '.') ?></td>
+            <td class="col-actions">
+              <div class="stack">
+                <a class="btn"
+                   href="admin_activiteit_form.php?id=<?= (int)$row['id'] ?>">
+                   Bewerken
+                </a>
+
+                <form class="inline"
+                      method="post"
+                      action="admin_activiteit_delete.php"
+                      onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?');">
+                  <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
+                  <input type="hidden" name="csrf_token"
+                         value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                  <button class="btn btn-danger" type="submit">
+                    Verwijderen
+                  </button>
                 </form>
+              </div>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+</div>
 </body>
 </html>
