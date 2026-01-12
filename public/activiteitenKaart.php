@@ -21,7 +21,7 @@ $result = $conn->query($sql);
 <?php include __DIR__ . '/../includes/header.php'; ?>
 
 <div class="hero">
-    <img src="images/tentt.jpg" alt="Tent" class="hero-img">
+    <img src="images/tent.png" alt="Tent" class="hero-img">
     <div class="hero-overlay">
         <h1 class="hero-title">Camping Boer Bert</h1>
     </div>
@@ -241,6 +241,7 @@ $result = $conn->query($sql);
         width: 100%;
         height: clamp(160px, 30vw, 320px); /* responsive height */
         object-fit: cover;
+        filter: brightness(60%);
     }
 
     .hero-overlay {
