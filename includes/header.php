@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,7 +24,7 @@
       padding: 0;
     }
 
-    body {
+    .header-body {
       font-family: 'Bebas Neue', sans-serif;
       background-color: var(--ivory);
       color: var(--coffee);
@@ -91,7 +92,8 @@
     }
   </style>
 </head>
-<body>
+
+<body class="header-body">
 
   <header>
     <div class="logo">
@@ -101,11 +103,9 @@
 
     <nav>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Over ons</a></li>
-        <li><a href="#">Camping</a></li>
-        <li><a href="#">Activiteiten</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="activiteitenkaart.php">Home</a></li>
+        <li><a href="overzicht.php">Camping</a></li>
+        <li><a href="reserveringen.php">Reserveringen</a></li>
       </ul>
     </nav>
 
@@ -113,4 +113,5 @@
   </header>
 
 </body>
+
 </html>
