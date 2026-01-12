@@ -109,7 +109,7 @@ $resultaat = $stmt->get_result();
 
                         <div class="price">€<?= $row['prijs']; ?></div>
 
-                        <a href="reserveer.php?id=<?= $row['activiteit_id'] ?>">
+                        <a href="inschrijven.php?id=<?= $row['activiteit_id'] ?>">
                             <button class="register-btn">Nu Inschrijven</button></a>
                     </aside>
                 </div>
