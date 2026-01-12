@@ -97,6 +97,231 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <title><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></title>
 </head>
+
+<style>
+    :root{
+      /* Palette (uit je figma voorbeeld) */
+      --green-dark:#658C6E;
+      --green:#85A898;
+      --green-light:#EFF9E8;
+      --yellow:#DFCD80;
+      --sand:#F5E2B0;
+      --ink:#453E3E;
+
+      --bg: var(--green-light);
+      --surface:#ffffff;
+      --border: rgba(69,62,62,.18);
+      --shadow: 0 10px 24px rgba(69,62,62,.12);
+      --radius:16px;
+
+      /* Toegankelijkheid */
+      --focus:#1d4ed8;  /* duidelijke focuskleur */
+      --danger:#7a2e2e; /* donker roodbruin met genoeg contrast */
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 400px at 10% 0%, rgba(133,168,152,.35), transparent 60%),
+        radial-gradient(800px 380px at 90% 0%, rgba(223,205,128,.35), transparent 55%),
+        linear-gradient(180deg, var(--bg), #fff 70%);
+      min-height:100vh;
+      padding:28px 16px 44px;
+
+      /* groter & iets dikker */
+      font-size:16px;
+      line-height:1.6;
+      font-weight:500;
+    }
+
+    .container{ max-width:900px; margin:0 auto; }
+
+    .page-intro{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:16px;
+      padding:18px;
+      background:rgba(255,255,255,.82);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .page-title{
+      margin:0;
+      font-size:26px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .page-subtitle{
+      margin:8px 0 0;
+      font-size:15px;
+      font-weight:500;
+      color:rgba(69,62,62,.80);
+      max-width:70ch;
+    }
+
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:12px 16px;
+      font-size:14px;
+      font-weight:800;
+      border-radius:12px;
+      border:1.5px solid var(--border);
+      background:var(--surface);
+      color:var(--ink);
+      text-decoration:none;
+      cursor:pointer;
+      box-shadow:0 2px 0 rgba(69,62,62,.10);
+      transition:.15s;
+    }
+    .btn:hover{ background:rgba(239,249,232,.9); }
+    .btn:active{ transform:translateY(1px); }
+
+    .btn-primary{
+      background:linear-gradient(180deg, rgba(101,140,110,.25), rgba(133,168,152,.25));
+      border-color:rgba(101,140,110,.50);
+    }
+
+    .btn-danger{
+      background:rgba(122,46,46,.08);
+      border-color:rgba(122,46,46,.45);
+    }
+    .btn-danger:hover{ background:rgba(122,46,46,.14); }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+      outline:3px solid var(--focus);
+      outline-offset:2px;
+      border-radius:12px;
+    }
+
+    .card{
+      margin-top:18px;
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-header{
+      padding:16px 18px;
+      background:linear-gradient(180deg, rgba(245,226,176,.80), rgba(223,205,128,.50));
+      border-bottom:1px solid var(--border);
+    }
+    .card-header strong{
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .card-body{ padding:18px; }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    label{ display:block; font-weight:800; }
+    .hint{
+      display:block;
+      margin-top:6px;
+      font-weight:600;
+      font-size:13px;
+      color:rgba(69,62,62,.75);
+    }
+
+    input[type="text"], input[type="number"], textarea{
+      width:100%;
+      margin-top:8px;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1.5px solid rgba(69,62,62,.22);
+      background:#fff;
+      color:var(--ink);
+      font-size:16px;
+      font-weight:600;
+    }
+
+    textarea{ resize:vertical; min-height:140px; }
+
+    .row-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .required{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .required .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--yellow);
+      border:1px solid rgba(69,62,62,.25);
+      flex:0 0 auto;
+    }
+
+    .errors{
+      margin:16px 0 0;
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid rgba(122,46,46,.35);
+      background: rgba(122,46,46,.06);
+    }
+    .errors-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      margin:0 0 10px;
+    }
+    .errors-title .icon{
+      width:22px; height:22px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(122,46,46,.35);
+      background: rgba(122,46,46,.10);
+      font-size:13px;
+      line-height:1;
+    }
+    .errors ul{ margin:0; padding-left:18px; }
+    .errors li{ margin:6px 0; font-weight:650; }
+
+    .footer-actions{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      padding:0 18px 18px;
+    }
+
+    @media (max-width:720px){
+      body{ padding:18px 12px 34px; }
+      .page-intro{ flex-direction:column; }
+      .row-2{ grid-template-columns:1fr; }
+      .footer-actions{ justify-content:flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; }
+    }
+  </style>
+
 <body>
   <h1><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></h1>
 

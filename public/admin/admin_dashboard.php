@@ -31,6 +31,7 @@ if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
         <li><a href="../deelnemers.php">Deelnemers bekijken</a></li>
         <li><a href="../activiteitenKaart.php">Activiteiten kaart</a></li>
         <li><a href="admin_activiteiten.php">Activiteiten beheren</a></li>
+        <li><a href="../overzicht.php">Alle inschrijvingen</a></li>
         <!-- hier kun je meer admin-linkjes zetten -->
     </ul>
 </body>
