@@ -178,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </style>
 </head>
+
 <body>
 
 <h2>Inschrijven</h2>
@@ -217,10 +218,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endfor; ?>
     </select>
 
-    <div id="personenvelden"></div>
+        <div id="personenvelden"></div>
 
-    <button type="submit">Inschrijven</button>
-</form>
+        <button type="submit">Inschrijven</button>
+    </form>
 
 <script>
 function updatePersonFields() {
@@ -239,4 +240,5 @@ updatePersonFields();
 </script>
 
 </body>
+
 </html>

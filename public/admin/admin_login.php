@@ -23,12 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin login</title>
 </head>
+
 <body>
     <h1>Admin login</h1>
 
@@ -54,4 +57,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Inloggen</button>
     </form>
 </body>
+
 </html>
