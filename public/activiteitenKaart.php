@@ -39,17 +39,17 @@ $result = $conn->query($sql);
     <?php
     $mapImage = 'images/map.jpg';
     $pins = [
-        ['image' => 'Zwembad.png', 'x' => 19, 'y' => 50, 'activity_id' => 1],
+        ['image' => 'Zwembad.png', 'x' => 13, 'y' => 50, 'activity_id' => 1],
         ['image' => 'Kampvuur.png', 'x' => 50, 'y' => 42, 'activity_id' => 2],
-        ['image' => 'Bingo.png', 'x' => 75, 'y' => 84, 'activity_id' => 3],
+        ['image' => 'Bingo.png', 'x' => 80, 'y' => 84, 'activity_id' => 3],
         ['image' => 'Geiten_yoga.png', 'x' => 48, 'y' => 15, 'activity_id' => 4],
-        ['image' => 'Melkeennnn.png', 'x' => 22, 'y' => 15, 'activity_id' => 5],
+        ['image' => 'Melkeennnn.png', 'x' => 17, 'y' => 15, 'activity_id' => 5],
         ['image' => 'Koeien_knuffelen.png', 'x' => 12, 'y' => 15, 'activity_id' => 6],
-        ['image' => 'Eieren_rapen.png', 'x' => 35, 'y' => 15, 'activity_id' => 7],
-        ['image' => 'Taffeltennis_toernooi.png', 'x' => 70, 'y' => 84, 'activity_id' => 8],
-        ['image' => 'Tienkamp.png', 'x' => 87, 'y' => 90, 'activity_id' => 9],
-        ['image' => 'Rondleiding.png', 'x' => 20, 'y' => 73, 'activity_id' => 10],
-        ['image' => 'Ijssalon.png', 'x' => 30, 'y' => 36, 'activity_id' => 11],
+        ['image' => 'Eieren_rapen.png', 'x' => 32, 'y' => 15, 'activity_id' => 7],
+        ['image' => 'Taffeltennis_toernooi.png', 'x' => 75, 'y' => 84, 'activity_id' => 8],
+        ['image' => 'Tienkamp.png', 'x' => 95, 'y' => 90, 'activity_id' => 9],
+        ['image' => 'Rondleiding.png', 'x' => 17, 'y' => 80, 'activity_id' => 10],
+        ['image' => 'Ijssalon.png', 'x' => 27, 'y' => 36, 'activity_id' => 11],
     ];
 
     // Build activities list for frontend (id, naam, tag, banner)
