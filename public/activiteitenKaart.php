@@ -270,6 +270,8 @@ $result = $conn->query($sql);
         width: calc(100% - 4rem);
         margin: 2rem auto;
         box-sizing: border-box;
+        order: 1;
+        flex: 1 1 auto;
     }
 
     #map {
@@ -328,7 +330,7 @@ $result = $conn->query($sql);
         background-position: center;
         transform: translate(-50%, -100%);
         cursor: pointer;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+
         pointer-events: auto;
         border: none;
         padding: 0;
@@ -358,10 +360,12 @@ $result = $conn->query($sql);
         display: flex;
         /* background-image: url(../public/images/Map_v2_taller.png); */
         background-size: cover;
-        height: 100vh;
+        min-height: calc(100vh - 200px);
         width: 100%;
         overflow-x: hidden;
         background-repeat: no-repeat;
+        align-items: flex-start;
+        gap: 1.5rem;
     }
 
 
@@ -384,34 +388,52 @@ $result = $conn->query($sql);
         text-decoration: underline;
     }
 
+    /* Sidebar (right column) */
     .sidebar {
-
+        box-sizing: border-box;
         font-family: Arial, Helvetica, sans-serif;
-        top: 0;
-        left: 80rem;
-        width: 200px;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
+        order: 2;
+        flex: 0 0 260px; /* fixed column width */
+        width: 260px;
+        height: calc(100vh - 140px);
+        position: sticky;
+        top: 30px;
+        background: linear-gradient(180deg, rgba(159,195,166,0.95), rgba(141,175,147,0.95));
+        color: #3b2b1b; /* warm brown text */
         padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        overflow: auto;
     }
 
     .sidebar>div:first-child {
-        font-weight: bold;
-        margin-bottom: 15px;
+        font-weight: 800;
+        margin-bottom: 12px;
         font-size: 16px;
+        color: #2f5a33;
+        letter-spacing: 0.4px;
     }
 
     .sidebar a {
         display: block;
-        padding: 8px 0;
-        color: #333;
+        padding: 10px 8px;
+        color: #3b2b1b;
         text-decoration: none;
-        font-size: 14px;
+        font-size: 15px;
+        border-radius: 6px;
+        transition: background 120ms ease, color 120ms ease;
     }
 
     .sidebar a:hover {
-        color: #0066cc;
-        text-decoration: underline;
+        color: white;
+        background: rgba(75, 98, 61, 0.9);
+    }
+
+    /* Mobile: stack map and sidebar */
+    @media (max-width: 900px) {
+        .activiteiten-body { flex-direction: column; gap: 0.5rem; }
+        .sidebar { position: relative; order: 2; width: 100%; flex: 0 0 auto; height: auto; top: auto; margin: 0 1rem; }
+        .map-wrapper { order: 1; width: 100%; }
+        .fullscreen-btn { top: 10px; right: 10px; }
     }
 </style>
