@@ -35,11 +35,17 @@ $result = $conn->query($sql);
         <div>
             <a href="?tag=">Alle activiteiten</a>
             <a href="?tag=geen_reservering">Geen reservering nodig</a> <br>
-            <a href="?tag=rustig">rustig</a> <br>
-            <a href="?tag=fysiek">fysiek</a><br>
-            <a href="?tag=jong">voor jonge kinderen</a><br>
-            <a href="?tag=eten">eten & drinken</a><br>
-            <a href="?tag=informatief">informatief</a><br>
+            <a href="?tag=rustig">Rustig</a> <br>
+            <a href="?tag=fysiek">Fysiek</a><br>
+            <a href="?tag=jong">Kinderen van 0 t/m 8 jaar</a><br>
+            <a href="?tag=eten">Eten & Drinken</a><br>
+            <a href="?tag=informatief">Informatief</a><br>
+            <a href="?tag=NonGast">Open voor niet campinggasten</a><br>
+            <a href="?tag=18+">18+</a><br>
+            <a href="?tag=Binnen">Binnen</a><br>
+            <a href="?tag=Buiten">Buiten</a><br>
+            <a href="?tag=workshop">Workshop</a><br>
+            <a href="?tag=gratis">Gratis</a><br>
         </div>
     </div>
 
