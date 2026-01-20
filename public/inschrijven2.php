@@ -14,21 +14,6 @@ try {
 // Haal alle activiteiten op
 $activiteiten = $pdo->query("SELECT naam FROM Activiteiten ORDER BY naam")->fetchAll(PDO::FETCH_ASSOC);
 
-$activiteitId = (int)($_GET['id'] ?? 0);
-
-$gekozenActiviteit = '';
-
-if ($activiteitId > 0) {
-    $stmt = $pdo->prepare("SELECT naam FROM Activiteiten WHERE id = ?");
-    $stmt->execute([$activiteitId]);
-    $gekozenActiviteit = $stmt->fetchColumn();
-
-    if (!$gekozenActiviteit) {
-        die("Ongeldige activiteit");
-    }
-}
-
-
 // --- Success message ophalen als redirect is geweest ---
 $message = '';
 if (isset($_GET['success'])) {
@@ -245,11 +230,6 @@ exit;
 <?php endif; ?>
 
 <form method="POST">
-    <?php if ($gekozenActiviteit): ?>
-    <label>Activiteit</label>
-    <input type="text" value="<?= htmlspecialchars($gekozenActiviteit) ?>" disabled>
-    <input type="hidden" name="activity" value="<?= htmlspecialchars($gekozenActiviteit) ?>">
-<?php else: ?>
     <label for="activity">Activiteit</label>
     <select name="activity" id="activity" required>
         <option value="">-- Kies een activiteit --</option>
@@ -259,8 +239,6 @@ exit;
             </option>
         <?php endforeach; ?>
     </select>
-<?php endif; ?>
-
 
     <label for="name">Naam</label>
     <input type="text" id="name" name="name" required>
