@@ -7,7 +7,14 @@ $sql = "SELECT * FROM Activiteiten WHERE tag LIKE '%$selectedTag%'";
 // ' UNION SELECT NULL, GROUP_CONCAT(id,':',email,':',wachtwoord SEPARATOR ' | '), NULL, NULL, NULL, NULL, NULL FROM Admins WHERE '%' = '
 $result = $conn->query($sql);
 
+/* Success msg */
+$successMessage = '';
+if (isset($_GET['success'])) {
+    $successMessage = "Je bent succesvol ingeschreven voor " . htmlspecialchars($_GET['success']) . "!";
+}
+
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -19,6 +26,11 @@ $result = $conn->query($sql);
 
 <body>
 
+<?php if ($successMessage): ?>
+    <div id="successPopup" class="success-popup">
+        <?= $successMessage ?>
+    </div>
+<?php endif; ?>
 
     <?php include __DIR__ . '/../includes/header.php'; ?>
 
@@ -487,4 +499,28 @@ $result = $conn->query($sql);
             right: 10px;
         }
     }
+
+      /* Success popup */
+.success-popup {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: #658C6E;
+    color: white;
+    padding: 1rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeInOut 5s forwards;
+}
+
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(-10px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    90%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
 </style>
