@@ -110,7 +110,7 @@
       </ul>
     </nav>
 
-    <a href="#" class="cta">Boek je plek</a>
+    <a href="inschrijven2.php" class="cta">Reserveer je activiteit</a>
   </header>
 
 </body>
