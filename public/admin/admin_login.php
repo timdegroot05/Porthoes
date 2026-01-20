@@ -65,9 +65,7 @@ body{
   padding:16px;
 }
 
-/* =========================
-   LOGIN CARD
-   ========================= */
+/* LOGIN CARD */
 .login-card{
   width:100%;
   max-width:420px;
@@ -90,9 +88,7 @@ body{
   color:rgba(69,62,62,.8);
 }
 
-/* =========================
-   FORM
-   ========================= */
+/* FORM */
 .form-group{
   margin-bottom:16px;
 }
@@ -124,9 +120,7 @@ input:focus-visible{
   outline-offset:2px;
 }
 
-/* =========================
-   BUTTON
-   ========================= */
+/* BUTTON */
 .btn{
   width:100%;
   display:inline-flex;
@@ -156,9 +150,7 @@ input:focus-visible{
   );
 }
 
-/* =========================
-   ERROR
-   ========================= */
+/* ERROR */
 .error{
   margin-bottom:16px;
   padding:14px;
@@ -183,9 +175,7 @@ input:focus-visible{
   font-size:13px;
 }
 
-/* =========================
-   FOOTER LINK
-   ========================= */
+/* FOOTER LINK */
 .login-footer{
   margin-top:18px;
   text-align:center;
@@ -204,9 +194,7 @@ input:focus-visible{
   border-radius:8px;
 }
 
-/* =========================
-   REDUCED MOTION
-   ========================= */
+/* REDUCED MOTION */
 @media (prefers-reduced-motion:reduce){
   *{ transition:none !important; }
 }
