@@ -153,23 +153,6 @@ $resultaat = $stmt->get_result();
           </aside>
         </div>
       </div>
-<<<<<<< HEAD
-
-    <?php }; ?>
-
-    <div class="2">
-      <div class="image-section">
-        <div class="top-texta">Aantal aanmeldingen:</div>
-        <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
-      </div>
-
-      <a href="inschrijven.php?id=<?= $row['id']; ?>" class="btn">
-    Nu inschrijven
-      </a>
-
-    </div>
-=======
->>>>>>> 52a660a72120711e098eaf46f7812afc97a4a2bc
     </div>
 
   <?php  }; ?>
