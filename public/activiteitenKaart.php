@@ -251,6 +251,13 @@ if (isset($_GET['success'])) {
                     renderPins(t);
                 });
             });
+
+  if (window.location.search.includes('success=')) {
+        const url = new URL(window.location);
+        url.searchParams.delete('success');
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+
         </script>
     </div>
 
