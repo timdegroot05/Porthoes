@@ -195,7 +195,10 @@ $resultaat = $stmt->get_result();
         <img src="/Porthoes/public/images/geitenyoga.png" alt="Activiteit Afbeelding" width="500px" height="200px">
       </div>
 
-      <a href="reserveer.php?id=1" class="btn">Nu inschrijven</a>
+      <a href="inschrijven.php?id=<?= $row['id']; ?>" class="btn">
+    Nu inschrijven
+      </a>
+
     </div>
     </div>
 
