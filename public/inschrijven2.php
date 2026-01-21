@@ -248,10 +248,12 @@ exit;
 
     <label for="kampeerplek">Kampeerplek</label>
     <select name="kampeerplek" id="kampeerplek" required>
+      <option value="0">Geen campinggast</option>
         <?php for ($i = 1; $i <= 60; $i++): ?>
-            <option value="<?= $i ?>">Plek <?= $i ?></option>
+          <option value="<?= $i ?>">Plek <?= $i ?></option>
         <?php endfor; ?>
     </select>
+
 
     <label for="aantal">Hoeveel personen wil je aanmelden?</label>
     <select name="aantal" id="aantal" onchange="updatePersonFields()" required>
