@@ -19,7 +19,6 @@
 
     .footer-title {
       font-weight: bold;
-      text-transform: lowercase;
       margin-bottom: 10px;
     }
   </style>
@@ -28,8 +27,8 @@
 
   <footer class="footer">
     <div class="footer-content">
-      <p class="footer-title">camping boer bert</p>
-      <p>heideberglaan 15</p>
+      <p class="footer-title">Camping Boer Bert</p>
+      <p>Heideberglaan 15</p>
       <p>3584 CS Utrecht</p>
       <p>gert.vanderstelt@hu.nl</p>
     </div>
