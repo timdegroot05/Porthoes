@@ -247,8 +247,9 @@ exit;
 <form method="POST">
     <?php if ($gekozenActiviteit): ?>
     <label>Activiteit</label>
-    <input type="text" value="<?= htmlspecialchars($gekozenActiviteit) ?>" disabled>
+    <input type="text" value="<?= htmlspecialchars(ucfirst($gekozenActiviteit)) ?>" disabled>
     <input type="hidden" name="activity" value="<?= htmlspecialchars($gekozenActiviteit) ?>">
+
 <?php else: ?>
     <label for="activity">Activiteit</label>
     <select name="activity" id="activity" required>
@@ -270,8 +271,9 @@ exit;
 
     <label for="kampeerplek">Kampeerplek</label>
     <select name="kampeerplek" id="kampeerplek" required>
+      <option value="0">Geen campinggast</option>
         <?php for ($i = 1; $i <= 60; $i++): ?>
-            <option value="<?= $i ?>">Plek <?= $i ?></option>
+          <option value="<?= $i ?>">Plek <?= $i ?></option>
         <?php endfor; ?>
     </select>
 

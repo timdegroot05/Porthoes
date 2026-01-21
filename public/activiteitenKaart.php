@@ -45,7 +45,7 @@ if (isset($_GET['success'])) {
 
     <!-- <div class="sidebar"> -->
     <div class="sidebar">
-        <div>filter opties</div>
+        <div>Filter opties</div>
         <div>
             <a href="?tag=">Alle activiteiten</a>
             <a href="?tag=geen_reservering">Geen reservering nodig</a> <br>
