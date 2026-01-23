@@ -4,8 +4,24 @@ include __DIR__ . '/../includes/db.php';
 // Haal alle activiteiten op
 $selectedTag = $_GET['tag'] ?? '';
 $sql = "SELECT * FROM Activiteiten WHERE tag LIKE '%$selectedTag%'";
-// ' UNION SELECT NULL, GROUP_CONCAT(id,':',email,':',wachtwoord SEPARATOR ' | '), NULL, NULL, NULL, NULL, NULL FROM Admins WHERE '%' = '
 $result = $conn->query($sql);
+
+// Haal unieke filters op uit de database
+$filters = [];
+$filterQuery = "SELECT DISTINCT tag FROM Activiteiten WHERE tag IS NOT NULL AND tag <> ''";
+$filterResult = $conn->query($filterQuery);
+if ($filterResult) {
+    while ($row = $filterResult->fetch_assoc()) {
+        $tags = preg_split('/[,;]/', $row['tag']);
+        foreach ($tags as $tag) {
+            $tag = trim($tag);
+            if (!empty($tag) && !in_array($tag, $filters)) {
+                $filters[] = $tag;
+            }
+        }
+    }
+    sort($filters, SORT_NATURAL | SORT_FLAG_CASE);
+}
 
 /* Success msg */
 $successMessage = '';
@@ -43,23 +59,13 @@ if (isset($_GET['success'])) {
 
     <div class="activiteiten-body">
 
-    <!-- <div class="sidebar"> -->
     <div class="sidebar">
         <div>Filter opties</div>
         <div>
             <a href="?tag=">Alle activiteiten</a>
-            <a href="?tag=geen_reservering">Geen reservering nodig</a> <br>
-            <a href="?tag=rustig">Rustig</a> <br>
-            <a href="?tag=fysiek">Fysiek</a><br>
-            <a href="?tag=jong">Kinderen van 0 t/m 8 jaar</a><br>
-            <a href="?tag=eten">Eten & Drinken</a><br>
-            <a href="?tag=informatief">Informatief</a><br>
-            <a href="?tag=NonGast">Open voor niet campinggasten</a><br>
-            <a href="?tag=18+">18+</a><br>
-            <a href="?tag=Binnen">Binnen</a><br>
-            <a href="?tag=Buiten">Buiten</a><br>
-            <a href="?tag=workshop">Workshop</a><br>
-            <a href="?tag=gratis">Gratis</a><br>
+            <?php foreach ($filters as $filter): ?>
+                <a href="?tag=<?= urlencode($filter) ?>"><?= htmlspecialchars($filter) ?></a><br>
+            <?php endforeach; ?>
         </div>
     </div>
 
@@ -206,6 +212,37 @@ if (isset($_GET['success'])) {
                     }
                 }
 
+                function updateActivitiesList(filterTag = '') {
+                    const activitiesContainer = document.querySelector('.activiteiten');
+                    if (!activitiesContainer) return;
+
+                    activitiesContainer.innerHTML = '';
+                    activities.forEach(activity => {
+                        if (filterTag && !activity.tag.includes(filterTag)) return;
+
+                        const activityLink = document.createElement('a');
+                        activityLink.href = `activiteit2.php?id=${activity.id}`;
+                        activityLink.textContent = activity.naam;
+                        activitiesContainer.appendChild(activityLink);
+                    });
+                }
+
+                function setActiveFilter(tag) {
+                    document.querySelectorAll('.sidebar a').forEach(a => {
+                        a.classList.remove('active');
+                        const url = new URL(a.href);
+                        if (url.searchParams.get('tag') === tag) {
+                            a.classList.add('active');
+                        }
+                    });
+                }
+
+                function applyFilter(tag) {
+                    renderPins(tag);
+                    updateActivitiesList(tag);
+                    setActiveFilter(tag);
+                }
+
                 // fullscreen toggle
                 fsBtn.addEventListener('click', () => {
                     if (!document.fullscreenElement) {
@@ -227,7 +264,7 @@ if (isset($_GET['success'])) {
                 // apply initial filter based on ?tag= in URL if present
                 const params = new URLSearchParams(window.location.search);
                 const initialTag = params.get('tag') || '';
-                renderPins(initialTag);
+                applyFilter(initialTag);
 
                 // intercept sidebar filter clicks to re-render without reload
                 document.querySelectorAll('.sidebar a').forEach(a => {
@@ -235,20 +272,17 @@ if (isset($_GET['success'])) {
                         e.preventDefault();
                         const url = new URL(a.href);
                         const tag = url.searchParams.get('tag') || '';
-                        renderPins(tag);
+                        applyFilter(tag);
                         // update URL
                         const newUrl = new URL(window.location.href);
                         newUrl.searchParams.set('tag', tag);
                         window.history.pushState({}, '', newUrl);
-                        // set active class
-                        document.querySelectorAll('.sidebar a').forEach(x => x.classList.remove('active'));
-                        a.classList.add('active');
                     });
                 });
 
                 window.addEventListener('popstate', () => {
                     const t = new URLSearchParams(window.location.search).get('tag') || '';
-                    renderPins(t);
+                    applyFilter(t);
                 });
             });
 
