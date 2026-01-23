@@ -31,6 +31,7 @@
       <p>Heideberglaan 15</p>
       <p>3584 CS Utrecht</p>
       <p>gert.vanderstelt@hu.nl</p>
+      <p><a href="admin/admin_login.php">Admin</a></p>
     </div>
   </footer>
 
