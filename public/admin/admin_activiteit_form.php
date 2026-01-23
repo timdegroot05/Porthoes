@@ -16,12 +16,42 @@ $naam = '';
 $beschrijving = '';
 $max_deelnemers = '';
 $prijs = '';
+$tag = ''; // blijft bestaan: we slaan uiteindelijk weer op als string
 
+/* =========================
+   NIEUW: haal alle filter-opties uit DB (uniek)
+========================= */
+$allFilters = [];
+$res = $conn->query("SELECT tag FROM Activiteiten WHERE tag IS NOT NULL AND tag <> ''");
+if ($res) {
+    while ($r = $res->fetch_assoc()) {
+        $parts = preg_split('/[,;]/', (string)$r['tag']);
+        foreach ($parts as $p) {
+            $p = trim($p);
+            if ($p !== '') $allFilters[$p] = true;
+        }
+    }
+}
+$allFilters = array_keys($allFilters);
+
+/* =========================
+   NIEUW: voeg extra filters toe
+========================= */
+$extraFilters = ['NonGast', '18+', 'Binnen', 'Buiten', 'Workshop', 'Gratis'];
+$allFilters = array_merge($allFilters, $extraFilters);
+$allFilters = array_unique($allFilters);
+sort($allFilters, SORT_NATURAL | SORT_FLAG_CASE);
+
+/* =========================
+   BEWERKEN: bestaande data ophalen
+========================= */
 if ($isEdit) {
-    $stmt = $conn->prepare("SELECT naam, beschrijving, max_deelnemers, prijs FROM Activiteiten WHERE id = ?");
+    // tag meenemen in SELECT
+    $stmt = $conn->prepare("SELECT naam, beschrijving, max_deelnemers, prijs, tag FROM Activiteiten WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
-    $stmt->bind_result($naam, $beschrijving, $max_deelnemers, $prijs);
+    $stmt->bind_result($naam, $beschrijving, $max_deelnemers, $prijs, $tag);
+
     if (!$stmt->fetch()) {
         $stmt->close();
         die("Activiteit niet gevonden.");
@@ -29,11 +59,34 @@ if ($isEdit) {
     $stmt->close();
 }
 
+/* =========================
+   NIEUW: geselecteerde filters als array voor de UI
+========================= */
+$selectedFilters = array_filter(array_map('trim', preg_split('/[,;]/', (string)$tag)));
+$selectedFilters = array_values(array_unique($selectedFilters));
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $naam = trim($_POST['naam'] ?? '');
     $beschrijving = trim($_POST['beschrijving'] ?? '');
     $max_deelnemers = trim($_POST['max_deelnemers'] ?? '');
     $prijs = trim($_POST['prijs'] ?? '');
+
+    /* =========================
+       NIEUW: tags komen nu uit checkboxes
+    ========================= */
+    $postedFilters = $_POST['tags'] ?? [];
+    if (!is_array($postedFilters)) $postedFilters = [];
+
+    // alleen toestaan wat in de DB-opties zit
+    $allowed = array_flip($allFilters);
+    $postedFilters = array_values(array_unique(array_filter(array_map('trim', $postedFilters))));
+    $postedFilters = array_values(array_filter($postedFilters, fn($t) => isset($allowed[$t])));
+
+    // opslaan als "tag" string (zoals jouw DB nu werkt)
+    $tag = implode(', ', $postedFilters);
+
+    // zodat form opnieuw correct checked wordt als er errors zijn
+    $selectedFilters = $postedFilters;
 
     if ($naam === '') {
         $errors[] = "Naam is verplicht.";
@@ -56,25 +109,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($isEdit) {
             $stmt = $conn->prepare("
                 UPDATE Activiteiten
-                SET naam = ?, beschrijving = ?, max_deelnemers = ?, prijs = ?
+                SET naam = ?, beschrijving = ?, max_deelnemers = ?, prijs = ?, tag = ?
                 WHERE id = ?
             ");
-            // Workaround: als je NULL wilt toestaan, maak kolommen NULLable.
             $max_db = $max_int ?? 0;
             $prijs_db = $prijs_val ?? 0.00;
 
-            $stmt->bind_param("ssidi", $naam, $beschrijving, $max_db, $prijs_db, $id);
+            $stmt->bind_param("ssidsi", $naam, $beschrijving, $max_db, $prijs_db, $tag, $id);
             $stmt->execute();
             $stmt->close();
         } else {
             $stmt = $conn->prepare("
-                INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO Activiteiten (naam, beschrijving, max_deelnemers, prijs, tag)
+                VALUES (?, ?, ?, ?, ?)
             ");
             $max_db = $max_int ?? 0;
             $prijs_db = $prijs_val ?? 0.00;
 
-            $stmt->bind_param("ssid", $naam, $beschrijving, $max_db, $prijs_db);
+            $stmt->bind_param("ssids", $naam, $beschrijving, $max_db, $prijs_db, $tag);
             $stmt->execute();
             $stmt->close();
         }
@@ -91,10 +143,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= $isEdit ? 'Activiteit bewerken' : 'Activiteit toevoegen' ?></title>
 
-  <!-- Styling in-file (kleurblindvriendelijk + sterke contrasten) -->
   <style>
     :root{
-      /* Palette (uit je figma voorbeeld) */
       --green-dark:#658C6E;
       --green:#85A898;
       --green-light:#EFF9E8;
@@ -108,9 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       --shadow: 0 10px 24px rgba(69,62,62,.12);
       --radius:16px;
 
-      /* Toegankelijkheid */
-      --focus:#1d4ed8;  /* duidelijke focuskleur */
-      --danger:#7a2e2e; /* donker roodbruin met genoeg contrast */
+      --focus:#1d4ed8;
+      --danger:#7a2e2e;
     }
 
     *{ box-sizing:border-box; }
@@ -126,7 +175,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       min-height:100vh;
       padding:28px 16px 44px;
 
-      /* groter & iets dikker */
       font-size:16px;
       line-height:1.6;
       font-weight:500;
@@ -186,12 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background:linear-gradient(180deg, rgba(101,140,110,.25), rgba(133,168,152,.25));
       border-color:rgba(101,140,110,.50);
     }
-
-    .btn-danger{
-      background:rgba(122,46,46,.08);
-      border-color:rgba(122,46,46,.45);
-    }
-    .btn-danger:hover{ background:rgba(122,46,46,.14); }
 
     a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
       outline:3px solid var(--focus);
@@ -304,6 +346,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       padding:0 18px 18px;
     }
 
+    /* ===== NIEUW: checkbox filter UI ===== */
+    .filters-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .filter-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border:1.5px solid rgba(69,62,62,.18);
+      border-radius:12px;
+      background:rgba(239,249,232,.55);
+    }
+    .filter-item input{
+      width:18px;
+      height:18px;
+      margin:0;
+    }
+
     @media (max-width:720px){
       body{ padding:18px 12px 34px; }
       .page-intro{ flex-direction:column; }
@@ -311,8 +375,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       .footer-actions{ justify-content:flex-start; }
     }
 
-    @media (prefers-reduced-motion: reduce){
-      *{ transition:none !important; }
+    textarea[name="beschrijving"]{
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+      font-family: Arial, Helvetica, sans-serif;
     }
   </style>
 </head>
@@ -363,6 +431,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label>Beschrijving</label>
             <span class="hint">Optioneel: wat houdt de activiteit in?</span>
             <textarea name="beschrijving"><?= htmlspecialchars($beschrijving) ?></textarea>
+          </div>
+
+          <!-- ✅ NIEUW: Filters kiezen uit DB-opties -->
+          <div>
+            <label>Filters</label>
+            <span class="hint">Je kunt alleen kiezen uit bestaande filters die al in de database voorkomen.</span>
+
+            <?php if (empty($allFilters)): ?>
+              <div class="filter-item" style="background: rgba(245,226,176,.35);">
+                Er zijn nog geen filters in de database. Voeg eerst een activiteit toe met een tag, of maak een aparte filter-tabel.
+              </div>
+            <?php else: ?>
+              <div class="filters-grid">
+                <?php foreach ($allFilters as $f): ?>
+                  <?php $checked = in_array($f, $selectedFilters, true); ?>
+                  <label class="filter-item">
+                    <input type="checkbox" name="tags[]" value="<?= htmlspecialchars($f) ?>" <?= $checked ? 'checked' : '' ?>>
+                    <span><?= htmlspecialchars($f) ?></span>
+                  </label>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
           </div>
 
           <div class="row-2">

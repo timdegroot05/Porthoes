@@ -104,12 +104,16 @@
     <nav>
       <ul>
         <li><a href="activiteitenkaart.php">Home</a></li>
+<<<<<<< HEAD
         <li><a href="overzicht.php">Camping</a></li>
         <li><a href="admin/admin_login.php">Admin</a></li>
+=======
+        <li><a href="over_ons.php">Over ons</a></li>
+>>>>>>> 21b4f24708239f7161a6a54cb1fd27e6553c8cb6
       </ul>
     </nav>
 
-    <a href="#" class="cta">Boek je plek</a>
+    <a href="inschrijven2.php" class="cta">Reserveer je activiteit</a>
   </header>
 
 </body>

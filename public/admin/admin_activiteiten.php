@@ -13,8 +13,8 @@ if (empty($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 require_once __DIR__ . '/../../includes/db.php';
 
 $result = $conn->query("
-    SELECT id, naam, max_deelnemers, prijs 
-    FROM Activiteiten 
+    SELECT id, naam, max_deelnemers, prijs, tag
+    FROM Activiteiten
     ORDER BY id DESC
 ");
 ?>
@@ -26,9 +26,7 @@ $result = $conn->query("
 <title>Activiteiten beheren</title>
 
 <style>
-/* =========================
-   KLEURENPALET (FIGMA)
-   ========================= */
+/* KLEURENPALET (FIGMA) */
 :root{
   --green-dark:#658C6E;
   --green:#85A898;
@@ -62,9 +60,7 @@ body{
   padding:28px 16px 44px;
 }
 
-/* =========================
-   LAYOUT
-   ========================= */
+/* LAYOUT */
 .container{
   max-width:1100px;
   margin:0 auto;
@@ -99,9 +95,7 @@ body{
   flex-wrap:wrap;
 }
 
-/* =========================
-   BUTTONS (niet alleen kleur)
-   ========================= */
+/* BUTTONS (niet alleen kleur) */
 .btn{
   display:inline-flex;
   align-items:center;
@@ -148,9 +142,7 @@ button:focus-visible{
   outline-offset:2px;
 }
 
-/* =========================
-   CARD + TABLE
-   ========================= */
+/* CARD + TABLE */
 .card{
   margin-top:18px;
   background:var(--surface);
@@ -204,9 +196,7 @@ tbody tr:hover{
   white-space:nowrap;
 }
 
-/* =========================
-   UI ELEMENTEN
-   ========================= */
+/* UI ELEMENTEN */
 .badge{
   display:inline-block;
   padding:6px 10px;
@@ -230,9 +220,7 @@ tbody tr:hover{
 
 form.inline{ display:inline; }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+/* RESPONSIVE */
 @media (max-width:720px){
   .page-intro{
     flex-direction:column;
@@ -242,9 +230,7 @@ form.inline{ display:inline; }
   }
 }
 
-/* =========================
-   REDUCED MOTION
-   ========================= */
+/* REDUCED MOTION */
 @media (prefers-reduced-motion:reduce){
   *{ transition:none !important; }
 }
@@ -280,21 +266,45 @@ form.inline{ display:inline; }
             <th>Naam</th>
             <th>Max. deelnemers</th>
             <th>Prijs</th>
+            <th>Filters</th>
             <th class="col-actions">Acties</th>
           </tr>
         </thead>
+
         <tbody>
         <?php while ($row = $result->fetch_assoc()): ?>
           <tr>
             <td><?= (int)$row['id'] ?></td>
             <td><?= htmlspecialchars($row['naam']) ?></td>
-            <td><span class="badge"><?= (int)$row['max_deelnemers'] ?></span></td>
-            <td class="price">€ <?= number_format($row['prijs'], 2, ',', '.') ?></td>
+
+            <td>
+              <span class="badge"><?= (int)$row['max_deelnemers'] ?></span>
+            </td>
+
+            <td class="price">€ <?= number_format((float)$row['prijs'], 2, ',', '.') ?></td>
+
+            <!-- ✅ FILTERS / TAGS -->
+            <td>
+              <?php
+                $tags = array_filter(
+                  array_map('trim', preg_split('/[,;]/', (string)($row['tag'] ?? '')))
+                );
+
+                if (!$tags) {
+                  echo '<span class="badge">—</span>';
+                } else {
+                  foreach ($tags as $t) {
+                    echo '<span class="badge">' . htmlspecialchars($t) . '</span> ';
+                  }
+                }
+              ?>
+            </td>
+
+            <!-- ✅ ACTIES -->
             <td class="col-actions">
               <div class="stack">
-                <a class="btn"
-                   href="admin_activiteit_form.php?id=<?= (int)$row['id'] ?>">
-                   Bewerken
+                <a class="btn" href="admin_activiteit_form.php?id=<?= (int)$row['id'] ?>">
+                  Bewerken
                 </a>
 
                 <form class="inline"
@@ -302,8 +312,7 @@ form.inline{ display:inline; }
                       action="admin_activiteit_delete.php"
                       onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?');">
                   <input type="hidden" name="id" value="<?= (int)$row['id'] ?>">
-                  <input type="hidden" name="csrf_token"
-                         value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                   <button class="btn btn-danger" type="submit">
                     Verwijderen
                   </button>
