@@ -105,7 +105,6 @@
       <ul>
         <li><a href="activiteitenkaart.php">Home</a></li>
         <li><a href="overzicht.php">Camping</a></li>
-        <li><a href="reserveringen.php">Reserveringen</a></li>
         <li><a href="admin/admin_login.php">Admin</a></li>
       </ul>
     </nav>
