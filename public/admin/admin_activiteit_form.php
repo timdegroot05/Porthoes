@@ -37,7 +37,7 @@ $allFilters = array_keys($allFilters);
 /* =========================
    NIEUW: voeg extra filters toe
 ========================= */
-$extraFilters = ['NonGast', '18+', 'Binnen', 'Buiten', 'Workshop', 'Gratis'];
+$extraFilters = ['NonGast', '18+', 'Binnen', 'Buiten', 'Workshop', 'Gratis', 'Geschikt voor kinderen 0-8 jaar oud'];
 $allFilters = array_merge($allFilters, $extraFilters);
 $allFilters = array_unique($allFilters);
 sort($allFilters, SORT_NATURAL | SORT_FLAG_CASE);
