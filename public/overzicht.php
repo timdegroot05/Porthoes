@@ -38,6 +38,9 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
+<a href="admin/admin_dashboard.php" class="btn back-btn">← Dashboard</a>
+
+
 <form method="GET">
     <label for="activiteit">Selecteer activiteit:</label>
     <select name="activiteit" id="activiteit" onchange="this.form.submit()">
@@ -92,81 +95,179 @@ $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </table>
 
 <style>
-    body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
-        background-color: #EFF9E8;
-        color: #2f3e34;
-        padding: 2rem;
-    }
+:root{
+  --green-dark:#658C6E;
+  --green:#85A898;
+  --green-light:#EFF9E8;
+  --yellow:#DFCD80;
+  --sand:#F5E2B0;
+  --ink:#453E3E;
 
-    h2 {
-        text-align: center;
-        color: #658C6E;
-        margin-bottom: 1.5rem;
-        font-size: 2rem;
-    }
+  --bg: var(--green-light);
+  --surface:#ffffff;
+  --border: rgba(69,62,62,.18);
+  --shadow: 0 10px 24px rgba(69,62,62,.12);
+  --radius:16px;
+}
 
-    form {
-        max-width: 500px;
-        margin: 0 auto 2rem;
-        padding: 1rem 1.2rem;
-        background: #F5E2B0;
-        border-radius: 8px;
-        border: 1px solid #85A898;
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-    }
+*{
+  box-sizing:border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
 
-    label {
-        font-weight: bold;
-        font-size: 1rem;
-    }
+body{
+  margin:0;
+  background:
+    radial-gradient(900px 400px at 10% 0%, rgba(133,168,152,.35), transparent 60%),
+    radial-gradient(800px 380px at 90% 0%, rgba(223,205,128,.35), transparent 55%),
+    linear-gradient(180deg, var(--bg), #fff 70%);
+  color:var(--ink);
+  min-height:100vh;
+  padding:28px 16px 44px;
+}
 
-    select {
-        font-size: 1rem;
-        padding: 0.6rem;
-        border-radius: 6px;
-        border: 1px solid #85A898;
-        background: #EFF9E8;
-        cursor: pointer;
-    }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background: #F5E2B0;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+/* TITEL */
 
-    th, td {
-        border: 1px solid #85A898;
-        padding: 0.8rem 1rem;
-        text-align: left;
-        vertical-align: top;
-        font-size: 0.95rem;
-    }
+h2{
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  margin-bottom:24px;
+  color:var(--ink);
+}
 
-    th {
-        background-color: #658C6E;
-        color: #EFF9E8;
-        font-size: 1rem;
-    }
 
-    tr:nth-child(even) {
-        background-color: #EFF9E8;
-    }
+/* FILTER FORM */
 
-    tr:hover {
-        background-color: #DFCD80;
-    }
+form{
+  max-width:500px;
+  margin:0 auto 24px;
+  padding:16px;
+  background:rgba(255,255,255,.85);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-    option {
-        font-size: 1rem;
-    }
+label{
+  font-weight:700;
+  font-size:14px;
+}
+
+select{
+  padding:10px 12px;
+  border-radius:12px;
+  border:1.5px solid var(--border);
+  background:var(--surface);
+  font-size:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+
+select:hover{
+  background:rgba(239,249,232,.9);
+}
+
+select:focus{
+  outline:none;
+  border-color:var(--green-dark);
+}
+
+
+/* TABEL */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--surface);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  border:1px solid var(--border);
+}
+
+th, td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  vertical-align:top;
+  font-size:14px;
+}
+
+th{
+  background:rgba(101,140,110,.15);
+  font-weight:800;
+  color:var(--ink);
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+tr:hover{
+  background:rgba(239,249,232,.7);
+}
+
+
+/* MOBIEL */
+
+@media (max-width:768px){
+
+  body{
+    padding:18px 12px 32px;
+  }
+
+  table{
+    font-size:13px;
+  }
+
+  th, td{
+    padding:10px;
+  }
+}
+
+/* TERUGKNOP */
+
+.back-btn{
+  position:fixed;
+  top:20px;
+  left:20px;
+
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  padding:10px 14px;
+
+  font-size:14px;
+  font-weight:800;
+
+  border-radius:12px;
+  border:1.5px solid var(--border);
+
+  background:var(--surface);
+  color:var(--ink);
+
+  text-decoration:none;
+
+  box-shadow:0 2px 0 rgba(69,62,62,.1);
+
+  transition:.15s;
+
+  z-index:1000;
+}
+
+.back-btn:hover{
+  background:rgba(239,249,232,.9);
+  transform:translateY(-1px);
+}
 
 </style>
+
 
 
 </body>
